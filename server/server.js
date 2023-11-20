@@ -32,3 +32,33 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Servidor Node.js en ejecución en http://localhost:${PORT}`);
 });
+
+// ... tu código existente ...
+
+const server = http.createServer((req, res) => {
+    if (req.method === 'POST' && req.url === '/login') {
+        let body = '';
+
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+
+        req.on('end', () => {
+            const data = JSON.parse(body);
+
+            // Simular la verificación de credenciales en el servidor
+            if (data.username === 'usuario' && data.password === 'contrasena') {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, message: 'Inicio de sesión exitoso' }));
+            } else {
+                res.writeHead(401, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, message: 'Credenciales incorrectas' }));
+            }
+        });
+    } else {
+        // ... manejo de rutas existente ...
+    }
+});
+
+// ... tu código existente ...
+
