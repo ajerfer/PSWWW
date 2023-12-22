@@ -29,19 +29,37 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
             top: 10px; /* Ajusta según sea necesario */
             right: 10px; /* Ajusta según sea necesario */
         }
+        .manage_store-btn{
+            display: inline-block;
+            padding: 20px 40px;
+            font-size: 24px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-<div class="container">
+    <div class="container"> 
+        <h1>Bienvenido a la Página de Administrador</h1>
+
+        <!-- Contenido adicional de la página de administrador -->
+        <p>Este es el contenido de la página de administrador.</p>
         <!-- Botón de Logout -->
         <form class="logout-btn" action="../logout.php" method="post">
             <input type="submit" value="Logout">
         </form>
 
-        <h1>Bienvenido a la Página de Administrador</h1>
+         <!-- Botón de Gestión de Almacén -->
+         <form action="manage_store.php" method="post">
+            <input type="submit" class="manage-btn" value="Manage Store">
+        </form>
 
-        <!-- Contenido adicional de la página de administrador -->
-        <p>Este es el contenido de la página de administrador.</p>
+       
     </div>
 </body>
 </html>
