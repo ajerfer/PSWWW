@@ -13,6 +13,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'citizen') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Ciudadano</title>
+    <link rel="stylesheet" type="text/css" href="../public/styles.css">
     <style>
         body {
             margin: 0;
