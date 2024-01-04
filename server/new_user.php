@@ -13,19 +13,19 @@
     <form action="procesar_registro.php" method="post">
         <label for="username">Username:</label>
         <input type="text" name="username" required>
-
+        <br><br>
         <label for="password">Password:</label>
         <input type="password" name="password" required>
-
+        <br><br>
         <label for="name">Name:</label>
         <input type="text" name="nombre" required>
-
+        <br><br>
         <label for="telefono">Phone:</label>
         <input type="tel" name="phone" required>
-
+        <br><br>
         <label for="address">Address:</label>
         <input type="text" name="address" required>
-
+        <br><br>
         <input type="submit" value="Register">
     </form>
 
