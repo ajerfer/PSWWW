@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Página Web</title>
+    <link rel="stylesheet" type="text/css" href="public/styles.css">
 </head>
 <body>
     <header>
@@ -21,5 +22,8 @@
 		<button type="submit">Login</button>
 	</form>
 	</div>
+	<a href="new_user.php">
+		<button>Crear Usuario</button>
+	</a>
 </body>
 </html>
