@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuario</title>
-    <link rel="stylesheet" type="text/css" href="public/styles.css">
+    <link rel="stylesheet" type="text/css" href="../public/styles.css">
     <style>
         form {
             display: flex;
