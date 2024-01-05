@@ -31,7 +31,7 @@
 
     <h2>Registro de Usuario</h2>
 
-    <form action="procesar_registro.php" method="post">
+    <form action="register_user.php" method="post">
         <label for="username">Username:</label>
         <input type="text" name="username" required>
         <br><br>
@@ -39,7 +39,7 @@
         <input type="password" name="password" required>
         <br><br>
         <label for="name">Name:</label>
-        <input type="text" name="nombre" required>
+        <input type="text" name="name" required>
         <br><br>
         <label for="telefono">Phone:</label>
         <input type="tel" name="phone" required>
