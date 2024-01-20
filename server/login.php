@@ -8,7 +8,7 @@ $username = $_POST['username'];
 $password = $_POST['password'];
 $con = connect();
 // Consultar la base de datos para verificar las credenciales
-$query = "SELECT * FROM User WHERE username = '$username' AND password = '$password'";
+$query = "SELECT * FROM Users WHERE username = '$username' AND password = '$password'";
 $result = mysqli_query($con, $query);
 
 if ($result) {
@@ -17,12 +17,12 @@ if ($result) {
         $user = mysqli_fetch_assoc($result);
 
         // Guardar información del usuario en la sesión
-        $_SESSION['user_id'] = $user['idUser'];
+        $_SESSION['userId'] = $user['userId'];
         $_SESSION['username'] = $user['username'];
-        $_SESSION['user_type'] = $user['userType'];
+        $_SESSION['role'] = $user['role'];
 
         // Redireccionar a la página correspondiente según el tipo de usuario
-        switch ($_SESSION['user_type']) {
+        switch ($_SESSION['role']) {
             case 'admin':
                 header("Location: admin/admin_page.php");
                 break;
