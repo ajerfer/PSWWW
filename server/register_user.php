@@ -8,6 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];
     $password = $_POST["password"]; // Hash de la contraseña
     $name = $_POST["name"];
+    $surname = $_POST["surname"];
     $phone = $_POST["phone"];
     $address = $_POST["address"];
 
@@ -19,16 +20,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Insertar datos en la base de datos
-    $queryUser = "INSERT INTO user (username, password, userType) 
+    $queryUser = "INSERT INTO Users (username, password, role) 
               VALUES ('$username', '$password', 'citizen')";
     mysqli_query($con, $queryUser);
 
     // Obtener el ID del usuario recién insertado
-    $citizen_id = mysqli_insert_id($con);
+    $userId = mysqli_insert_id($con);
 
     // Insertar datos en la tabla Citizen
-    $queryCitizen = "INSERT INTO Citizen (idCitizen, name, phone, address)
-                 VALUES ('$citizen_id', '$name', '$phone', '$address')";
+    $queryCitizen = "INSERT INTO Citizens (userId, name, surname, phone, address)
+                 VALUES ('$userId', '$name', '$surname', '$phone', '$address')";
     mysqli_query($con, $queryCitizen);
 
     // Verificar si la inserción fue exitosa
