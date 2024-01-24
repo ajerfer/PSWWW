@@ -44,7 +44,7 @@
         <label for="surname">Surname:</label>
         <input type="text" name="surname" required>
         <br><br>
-        <label for="telefono">Phone:</label>
+        <label for="phone">Phone:</label>
         <input type="tel" name="phone" required>
         <br><br>
         <label for="address">Address:</label>
