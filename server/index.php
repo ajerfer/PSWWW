@@ -20,6 +20,7 @@
 		<input type="password" id="password" name="password" required>
 		<br><br>
 		<button type="submit">Login</button>
+		<br><br>
 	</form>
 	</div>
 	<a href="new_user.php">
