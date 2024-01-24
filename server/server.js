@@ -4,7 +4,7 @@ const path = require('path');
 
 const server = http.createServer((req, res) => {
     // Manejo de rutas
-    const filePath = req.url === '/' ? '/index.html' : req.url;
+    const filePath = req.url === '/' ? '/index.php' : req.url;
     const fullPath = path.join(__dirname, '../public', filePath);
 
     // Leer el archivo correspondiente
