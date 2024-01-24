@@ -12,7 +12,6 @@ try {
     // Seleccionar la base de datos
     $dataBase = $client->$dbName;
 
-    echo "Conexión exitosa a la base de datos: $dbName";
 } catch (MongoDB\Exception\Exception $e) {
     echo "Error de conexión: " . $e->getMessage();
 }
