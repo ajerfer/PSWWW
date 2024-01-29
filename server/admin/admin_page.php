@@ -7,6 +7,7 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
