@@ -13,7 +13,7 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Administrador</title>
-    <link rel="stylesheet" type="text/css" href="../public/styles.css">
+    <link rel="stylesheet" type="text/css" href="../../public/styles.css">
     <style>
         body {
             margin: 0;
@@ -59,8 +59,11 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
          <form action="manage_store.php" method="post">
             <input type="submit" class="manage-btn" value="Manage Store">
         </form>
-
-       
+        
+        <form action="new_rescuer.php" method="post">
+            <input type="submit" value="New rescuer">
+        </form>
+        
     </div>
 </body>
 </html>
