@@ -10,7 +10,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST["name"];
     $surname = $_POST["surname"];
     $phone = $_POST["phone"];
-    $address = $_POST["address"];
+    $lat = $_POST["lat"];
+    $lng = $_POST["lng"];
 
     $con = connect();
 
@@ -28,8 +29,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userId = mysqli_insert_id($con);
 
     // Insertar datos en la tabla Citizen
-    $queryCitizen = "INSERT INTO Citizens (userId, name, surname, phone, address)
-                 VALUES ('$userId', '$name', '$surname', '$phone', '$address')";
+
+    $queryCitizen = "INSERT INTO Citizens (userId, name, surname, phone, lat, lng)
+                 VALUES ('$userId', '$name', '$surname', '$phone', '$lat', '$lng')";
     mysqli_query($con, $queryCitizen);
 
     // Verificar si la inserción fue exitosa

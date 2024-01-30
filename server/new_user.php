@@ -26,6 +26,17 @@
             margin-top: 10px;
         }
     </style>
+    <link rel="stylesheet" href="../lib/leaflet/leaflet.css" />
+    <style>
+        #map {
+            width: 300%;
+            height: 600px;
+            margin-left: -300px;
+        }
+        #coordinates-label {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
@@ -46,12 +57,15 @@
         <br><br>
         <label for="phone">Phone:</label>
         <input type="tel" name="phone" required>
-        <br><br>
         <label for="address">Address:</label>
-        <input type="text" name="address" required>
-        <br><br>
+        <input type="hidden" name="lat" id="lat" required>
+        <input type="hidden" name="lng" id="lng" required>
+        <div id="map"></div>
         <input type="submit" value="Register">
     </form>
 
 </body>
 </html>
+
+<script src="../lib/leaflet/leaflet.js"></script>
+<script src="../public/js/map_register.js"></script>
