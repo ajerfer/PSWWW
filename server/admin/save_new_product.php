@@ -36,7 +36,14 @@ if (!empty($newDetails) && !empty($newValues)) {
         ];
     }
 }
-$filter = ['_id' => new MongoDB\BSON\ObjectId('65ae85d89abdeb149ebd2d68')];
+// Obtener el primer documento de la colección
+$firstDocument = $productsCollection->findOne();
+
+// Obtener el _id del primer documento
+$firstDocumentId = $firstDocument['_id'];
+
+// Utilizar el _id en la actualización
+$filter = ['_id' => $firstDocumentId];
 $result = $productsCollection->updateOne(
     $filter,
     ['$push' => ['items' => $newProduct]]
@@ -51,3 +58,4 @@ if ($result->getModifiedCount() > 0) {
 echo '<br><br><a href="manage_store.php">Come back to manage the store</a>';
 exit();
 ?>
+
