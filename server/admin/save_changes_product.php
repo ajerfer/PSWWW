@@ -14,14 +14,15 @@ $productsCollection = $dataBase->Products;
 // Obtener datos del formulario
 $itemId = $_POST['itemId'];
 $newName = $_POST['itemName'];
-$newDetails = $_POST['detailName'];
-$newValues = $_POST['detailValue'];
-
+$newQuantity = $_POST['itemQuantity'];
+$newDetails = isset($_POST['detailName']) ? $_POST['detailName'] : [];
+$newValues = isset($_POST['detailValue']) ? $_POST['detailValue'] : [];
 // Buscar el item en la colección
 $filter = ['items.id' => $itemId];
 $update = [
     '$set' => [
         'items.$.name' => $newName,
+        'items.$.quantity' => $newQuantity,
         'items.$.details' => [],
     ],
 ];
