@@ -12,8 +12,9 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
 $productsCollection = $dataBase->Products;
 
 // Obtener datos del formulario
-$newName = isset($_POST['itemName']) ? $_POST['itemName'] : '';
-$newCategory = isset($_POST['category']) ? $_POST['category'] : '';
+$newName = $_POST['itemName'];
+$newCategory = $_POST['category'];
+$newQuantity = $_POST['itemQuantity'];
 $newDetails = isset($_POST['detailName']) ? $_POST['detailName'] : [];
 $newValues = isset($_POST['detailValue']) ? $_POST['detailValue'] : [];
 
@@ -21,6 +22,7 @@ $newProduct = [
     'id' => uniqid(),
     'name' => $newName,
     'category' => $newCategory,
+    'quantity' => $newQuantity,
     'details' => []
 ];
 
@@ -58,4 +60,3 @@ if ($result->getModifiedCount() > 0) {
 echo '<br><br><a href="manage_store.php">Come back to manage the store</a>';
 exit();
 ?>
-
