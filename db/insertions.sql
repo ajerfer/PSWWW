@@ -8,5 +8,3 @@ INSERT INTO `users` (`userId`, `username`, `password`, `role`) VALUES
 (1, 'admin', 'password', 'admin'),
 (2, 'rescuer1', 'rescuer', 'rescuer'),
 (3, 'citizen1', 'citizen', 'citizen');
-
-INSERT INTO markers VALUES (1,38.249196, 21.735073, "prueba", "rescue");

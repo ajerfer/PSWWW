@@ -6,6 +6,7 @@
     <title>Mapa con Leaflet</title>
     
     <link rel="stylesheet" href="../lib/leaflet/leaflet.css" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
     <style>
         #map {
@@ -42,4 +43,5 @@
 <link rel="stylesheet" href="../lib/leaflet/MarkerCluster.Default.css" />
 <script src="../lib/leaflet/leaflet.markercluster.js"></script>
 <!-- Incluye tu archivo JavaScript externo -->
+<script src="creating_markers.php"></script>
 <script src="../public/js/map.js"></script>

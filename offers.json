@@ -1,0 +1,16 @@
+{
+    "code": 1,
+    "message": "Retrieved successfully",
+    "offer": [
+        {
+        "id": 1,
+        "idUser": 3,
+        "state": 0,
+        "rescuerId": -1,
+        "dateCreated": 0,
+        "dateCompleted": 0,
+        "products": ["Toothbrush"],
+        "nProducts": [10]
+        }
+    ]
+}
