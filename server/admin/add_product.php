@@ -36,7 +36,11 @@ $uniqueCategories = $productsCollection->distinct('categories', [],['id', 'categ
                     <option value="<?= $category['id'] ?>"><?= $category['category_name'] ?></option>
                 <?php endforeach; ?>
             </select>
-            <h3>Detalles del Item:</h3>
+            <h3>Item Details:</h3>
+            <li>
+            <label for="itemQuantity">Quantity:</label>
+            <input type="text" id="itemQuantity" name="itemQuantity" value="" required>
+            </li>
             <ul id="detailsList"></ul>
             <button type="button" onclick="addDetail()">Add Detail</button>
             <button type="submit">Save</button>
