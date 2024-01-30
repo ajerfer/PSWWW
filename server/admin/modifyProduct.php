@@ -45,6 +45,11 @@ foreach ($productos as $producto) {
             
             <h3>Detalles del Item:</h3>
             <ul id="detailsList">
+                <li> 
+                    <label for="itemQuantity">Quantity:</label> 
+                    <input type="text" id="itemQuantity" name="itemQuantity" value="<?= $selectedItem['quantity'] ?>" required>
+                </li>
+                <br><br>
                 <?php foreach ($selectedItem['details'] as $index => $detail): ?>
                     <li id="detailItem_<?= $index ?>">
                         <label for="detailName<?= $index ?>">Detail Name:</label>
