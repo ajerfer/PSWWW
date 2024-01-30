@@ -27,13 +27,18 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `citizens`
 --
 
+DROP DATABASE prueba;
+CREATE DATABASE prueba;
+USE prueba;
+
 CREATE TABLE IF NOT EXISTS `citizens` (
   `citizenId` int(11) NOT NULL,
   `userId` int(11) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `surname` varchar(100) DEFAULT NULL,
   `phone` varchar(45) DEFAULT NULL,
-  `address` varchar(45) DEFAULT NULL
+  `lat` DOUBLE NOT NULL,
+  `lng` DOUBLE NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -41,7 +46,9 @@ CREATE TABLE IF NOT EXISTS `rescuers` (
   `rescuerId` int(11) NOT NULL,
   `userId` int(11) DEFAULT NULL,
   `name` varchar(45) NOT NULL,
-  `surname` varchar(100) NOT NULL
+  `surname` varchar(100) NOT NULL,
+  `lat` DOUBLE NOT NULL,
+  `lng` DOUBLE NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Estructura de tabla para la tabla `users`
@@ -74,11 +81,6 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`userId`),
   ADD UNIQUE KEY `username` (`username`);
 
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
 -- AUTO_INCREMENT de la tabla `citizens`
 --
 ALTER TABLE `citizens`
@@ -95,7 +97,7 @@ ALTER TABLE `rescuers`
 --
 ALTER TABLE `users`
   MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
+/*
 ALTER TABLE `citizens`
   ADD CONSTRAINT `citizens_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`);
 
@@ -105,14 +107,14 @@ ALTER TABLE `citizens`
 ALTER TABLE `rescuers`
   ADD CONSTRAINT `rescuers_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`);
 COMMIT;
+*/
 
 CREATE TABLE IF NOT EXISTS markers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     lat DOUBLE NOT NULL,
     lng DOUBLE NOT NULL,
-    description VARCHAR(255),
-    category VARCHAR(50),
-    userType VARCHAR(50)
+    descrip TEXT,
+    category TEXT
 );
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
