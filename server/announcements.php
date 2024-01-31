@@ -1,93 +1,34 @@
 <?php
+session_start();
+
+// // Verify the user 
+// if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin' || $_SESSION['role'] !== 'citizen') {
+//     header("Location: ../index.php"); // Redirigir a la página de inicio de sesión
+//     exit();
+// } 
+
+
 
 include_once "mongodbconnect.php";
 
-// Obtener la colección de anuncios y de productos de MongoDB
-try {
-    $announcementsC = $dataBase->Announcements;
-    $productsC = $dataBase->Products;
-    
-} catch (MongoDB\Driver\Exception\Exception $e) {
-    echo "Error selecting the collection: " . $e->getMessage();
-}
+// Fetch documents from the collection
+$documentP = $productsC->findOne([]);
+$documentA = $announcementsC->findOne([]);
 
-// Obtener documentos de la colección
-$cursorP = $productsC->find();
-$cursorA = $announcementsC->find();
-
-// Array para almacenar los nombres de los productos
+// Array to store product names
 $productsNames = [];
 
-// Recorrer los productos y extraer los nombres
-foreach ($cursorP as $document) {
-    foreach ($document['items'] as $item) {
-            $productsNames[] = $item['name'];
-    }
+// Iterate through products and extract names
+foreach ($documentP['items'] as $item) {
+    $productsNames[] = $item['name'];
 }
+
 ?>
-
-<script>
-    function openPopupBox(id) {
-        const modal = document.getElementById('modal' + id);
-        modal.style.display = 'block';
-    }
-
-    function closePopupBox(id) {
-        const modal = document.getElementById('modal' + id);
-        modal.style.display = 'none';
-    }
-
-    function getQuantities(inputModal, n) {
-        const quantities = [];
-        for (let i = 0; i < n; i++) {
-            const input = document.querySelector(`[name="${inputModal}${i}_modal"]`);
-            quantities.push(parseInt(input.value));
-        }
-        return quantities;
-    }
-
-    function createOffer(idAnuncio, valores) {
-        // AQUI FALTA EL CÓDIGO PARA CREAR LA OFERTA Y REDIRIGIR AL PHP DE OFERTAS
-        console.log(`Creando oferta para el anuncio ${idAnuncio} con valores:`, valores);
-    }
-
-    function addProduct() {
-        // Si selectedProducts no es un array, inicialízalo como un array vacío
-        if (!Array.isArray(selectedProducts)) {
-            selectedProducts = [];
-        }
-        
-        
-        // Obtener el valor seleccionado de la lista desplegable
-        const selectedProduct = document.getElementById('productDropdown').value;
-
-        // Añadir el producto al array
-        selectedProducts.push(selectedProduct);
-
-        // Mostrar el array de productos en el cuadro emergente
-        showProducts();
-    }
-
-    function showProducts() {
-        const productsContainer = document.getElementById('selectedProducts');
-        productsContainer.innerHTML = '<strong>Selected Products:</strong>';
-
-        selectedProducts.forEach(product => {
-            const productItem = document.createElement('p');
-            productItem.textContent = product;
-            productsContainer.appendChild(productItem);
-        });
-    }
-
-
-    function cretateAnnouncement(productsSelection, n) {
-        
-    }
-</script>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script src="announcements.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../../public/styles.css">
@@ -123,7 +64,6 @@ foreach ($cursorP as $document) {
             height: 100%;
             background-color: rgba(0,0,0,0.7);
         }
-
         .modal-content {
             position: absolute;
             top: 50%;
@@ -139,58 +79,61 @@ foreach ($cursorP as $document) {
 <h1>Announcements List</h1>
 
 <!-- New Announcement Button -->
-<button onclick="openPopupBox('newAnnouncement')">Create Announcement</button>
+<!-- if ($_SESSION['role'] === 'citizen'): -->
+    <button onclick="openPopupBox('newAnnouncement')">Create Announcement</button>
+<!-- endif; -->
 
-<?php foreach ($cursorA as $document): ?>
-    <?php foreach ($document['announcements'] as $announcement): ?>
-        <div class="announcement-box">
-            <h3>Announcement</h3>
-                <ul>
-                    <?php foreach ($announcement['products'] as $string): ?>
-                        <li><?php echo htmlspecialchars($string); ?></li>
-                        
-                    <?php endforeach; ?>
-                </ul>
-            <!-- Button - Only for citizen -->
-            <!-- if ($_SESSION['role'] === 'citizen'): -->
-                <button onclick="openPopupBox(<?= $announcement['id'] ?>)">Make offer</button>
-            <!-- endif; -->
-        </div>
-        <!-- Popup box -->
-        <div id="modal<?= $announcement['id'] ?>" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closerPopup(<?= $announcement['id'] ?>)">&times;</span>
-                <?php foreach ($announcement['products'] as $index => $product): ?>
-                    <p><?= $product ?></p>
-                    <input type="number" name="input<?= $index ?>_modal" class="input_modal" min="0" value="0">
-                <?php endforeach; ?>
-                <div class="btn-container">
-                    <button onclick="closePopupBox(<?= $announcement['id'] ?>)">Close</button>
-                    <button onclick="createOffer(<?= $announcement['id'] ?>, getQuantities('input_modal', <?= count($announcement['products']) ?>))">Create offer</button>
-                </div>
+<!--  Announcement List -->
+<?php foreach ($documentA['announcements'] as $announcement): ?>
+    <!-- Announcement Box -->
+    <div class="announcement-box">
+        <h3>Announcement</h3>
+        <ul>
+            <?php foreach ($announcement['products'] as $string): ?>
+                <li><?php echo htmlspecialchars($string); ?></li>
+            <?php endforeach; ?>
+        </ul>
+        <!-- Button - Only for citizen -->
+        <!-- if ($_SESSION['role'] === 'citizen'): -->
+            <button onclick="openPopupBox(<?= $announcement['id'] ?>)">Make offer</button>
+        <!-- endif; -->
+        <!-- Button - Only for admin -->
+        <!-- if ($_SESSION['role'] === 'admin'): -->
+            <button onclick="callDeleteAnnouncement(<?= $announcement['id'] ?>)">Delete</button>
+        <!-- endif; -->
+    </div>
+    <!-- Popup Offer Box -->
+    <div id="modal<?= $announcement['id'] ?>" class="modal">
+        <div class="modal-content">
+            <?php foreach ($announcement['products'] as $index => $product): ?>
+                <p><?= $product ?></p>
+                <input type="number" name="input<?= $index ?>_modal" class="input_modal" min="0" value="0">
+            <?php endforeach; ?>
+            <div class="btn-container">
+                <button onclick="closePopupBox(<?= $announcement['id'] ?>)">Close</button>
+                <button onclick="createOffer(<?= $announcement['id'] ?>, getQuantities('input_modal', <?= count($announcement['products']) ?>))">Create offer</button>
             </div>
         </div>
-    <?php endforeach; ?>
+    </div>
 <?php endforeach; ?>
 
 <!-- New Announcement Popup Box -->
 <div id="modalnewAnnouncement" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closePopupBox('newAnnouncement')">&times;</span>
         <h2>New Announcement</h2>
         <div class="input-container">
-            <label for="productDropdown">Select a Product:</label>
+            <label for="productDropdown">Add a product: </label>
             <select id="productDropdown">
                 <?php foreach ($productsNames as $productName): ?>
                     <option value="<?= $productName ?>"><?= $productName ?></option>
                 <?php endforeach; ?>
             </select>
-            <button onclick="addProduct()">Add Product</button>
+            <button onclick="addProduct()" style="margin-top:10px">Add Product</button>
         </div>
-        <div id="selectedProducts"></div>
+        <div id="selectedProductsContainer"></div>
         <div class="btn-container">
             <button onclick="closePopupBox('newAnnouncement')">Close</button>
-            <button onclick="createAnnouncement('newAnnouncement')">Create</button>
+            <button onclick="callCreateAnnouncement()">Create</button>
         </div>
     </div>
 </div>

@@ -3,19 +3,19 @@
     "message": "Retrieved successfully",
     "announcements": [
         {
-        "id": 1,
+        "id": 0,
         "products": ["Water", "Bread"]
         },
         {
-        "id": 2,
+        "id": 1,
         "products": ["Spaghetti", "Disposable gloves"]
         },
         {
-        "id": 3,
+        "id": 2,
         "products": ["Socks", "Cereal bar"]
         },
         {
-        "id": 4,
+        "id": 3,
         "products": ["Condensed milk", "Thermos"]
         }
     ]

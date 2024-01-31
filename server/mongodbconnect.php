@@ -1,6 +1,6 @@
 <?php
 
-require '../vendor/autoload.php';
+require './vendor/autoload.php';
 // Datos de conexión a MongoDB
 $uri = "mongodb://localhost:27017";
 $dbName = "Web";
@@ -14,6 +14,14 @@ try {
 
 } catch (MongoDB\Exception\Exception $e) {
     echo "Error de conexión: " . $e->getMessage();
+}
+
+try {
+    $announcementsC = $dataBase->Announcements; // Announcements' Container
+    $productsC = $dataBase->Products;   // Products' Container
+    
+} catch (MongoDB\Driver\Exception\Exception $e) {
+    echo "Error selecting the collection: " . $e->getMessage();
 }
 
 ?>
