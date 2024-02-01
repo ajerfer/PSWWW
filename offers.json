@@ -1,12 +1,12 @@
 {
     "code": 1,
     "message": "Retrieved successfully",
-    "idUser":3,
+    "idUser":"3",
     "offers": [
         {
-        "id": 1,
-        "idAnnouncement":1,
-        "state": 0, 
+        "id": "1",
+        "idAnnouncement":"0",
+        "state": "0", 
         "rescuerId": null,
         "dateCreated": {
             "$date": {
@@ -18,9 +18,9 @@
         "nProducts": [5, 7]
         },
         {
-            "id": 2,
-            "idAnnouncement":1,
-            "state": 2, 
+            "id": "2",
+            "idAnnouncement":"1",
+            "state": "2", 
             "rescuerId": null,
             "dateCreated": {
                 "$date": {
@@ -34,8 +34,8 @@
                 "$date": {
                     "$numberLong": "1644643600000"
                 }},
-            "products": ["Water", "Bread"],
-            "nProducts": [5, 7]
+            "products": ["Water"],
+            "nProducts": [10]
             }
     ]
 }

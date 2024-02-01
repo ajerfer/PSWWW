@@ -89,3 +89,63 @@ function saveMarkerToDatabase(lat, lng, descrip, cat) {
         })
         .catch(error => console.error('Error saving marker:', error));
 }
+
+// Assume markerData is an array of marker information
+var markerData = [
+    { id: 1, lat: 40.7128, lng: -74.0060, name: "Marker 1" },
+    { id: 2, lat: 34.0522, lng: -118.2437, name: "Marker 2" },
+    // Add more markers as needed
+];
+
+var legend = L.control({ position: 'topright' });
+
+legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'legend');
+    div.innerHTML = '<h4>Legend</h4>';
+    return div;
+};
+
+legend.addTo(map);
+
+// Create markers and add them to the map
+markerData.forEach(function (data) {
+    var marker = L.marker([data.lat, data.lng]).addTo(map);
+
+    // Add a button to the marker's popup
+    marker.bindPopup(data.name + '<br><button class="addToLegendBtn">Add to Legend</button>');
+
+    // Handle button click to add marker to the legend
+    marker.on('popupopen', function () {
+        var addToLegendBtn = document.querySelector('.addToLegendBtn');
+        addToLegendBtn.addEventListener('click', function () {
+            addToLegend(data.id, data.name);
+        });
+    });
+});
+
+function addToLegend(markerId, markerName) {
+    // Add marker information to the legend
+    var legendDiv = document.querySelector('.legend');
+    var entry = document.createElement('div');
+    entry.innerHTML = '<p>' + markerName + ' <button class="removeFromLegendBtn" data-id="' + markerId + '">Remove</button></p>';
+    legendDiv.appendChild(entry);
+
+    // Attach event listener to the remove button in the legend
+    var removeFromLegendBtn = entry.querySelector('.removeFromLegendBtn');
+    removeFromLegendBtn.addEventListener('click', function () {
+        removeFromLegend(markerId);
+    });
+}
+
+function removeFromLegend(markerId) {
+    // Remove marker from the map
+    // Assume you have a reference to the marker object or use a marker cluster to manage markers
+    // var markerToRemove = ...
+
+    // Remove marker from the legend
+    var legendDiv = document.querySelector('.legend');
+    var entryToRemove = legendDiv.querySelector('[data-id="' + markerId + '"]');
+    if (entryToRemove) {
+        legendDiv.removeChild(entryToRemove);
+    }
+}

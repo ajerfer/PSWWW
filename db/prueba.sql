@@ -36,9 +36,7 @@ CREATE TABLE IF NOT EXISTS `citizens` (
   `userId` int(11) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `surname` varchar(100) DEFAULT NULL,
-  `phone` varchar(45) DEFAULT NULL,
-  `lat` DOUBLE NOT NULL,
-  `lng` DOUBLE NOT NULL
+  `phone` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -46,9 +44,7 @@ CREATE TABLE IF NOT EXISTS `rescuers` (
   `rescuerId` int(11) NOT NULL,
   `userId` int(11) DEFAULT NULL,
   `name` varchar(45) NOT NULL,
-  `surname` varchar(100) NOT NULL,
-  `lat` DOUBLE NOT NULL,
-  `lng` DOUBLE NOT NULL
+  `surname` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Estructura de tabla para la tabla `users`
@@ -58,7 +54,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `userId` int(11) NOT NULL,
   `username` varchar(45) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `role` enum('admin','citizen','rescuer') NOT NULL
+  `role` enum('admin','citizen','rescuer') NOT NULL,
+  `lat` DOUBLE NOT NULL,
+  `lng` DOUBLE NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Indices de la tabla `citizens`

@@ -1,17 +1,48 @@
 <?php
+session_start();
 include_once "mongodbconnect.php";
 include_once "databaseconnect.php";
 
-$collection = $dataBase->Offers;
+$con = connect();
 
+if (isset($_SESSION['userId']) && $_SESSION['role'] == 'rescuer') {
+    $user = $_SESSION['userId'];
+    $sql = "SELECT lat, lng FROM users WHERE userId = $user";
+    $result = $con->query($sql);
+    $row = $result->fetch_assoc();
+    $rescuers = [1,$row['lat'],$row['lng']];
+    $sql = "SELECT name FROM rescuers WHERE userId = $user";
+    $result = $con->query($sql);
+    $row = $result->fetch_assoc();
+    $rescuers[] = $row['name'];
+    $rescuers[] = $user;
+    $rescuers = [$rescuers];
+} else if (isset($_SESSION['userId']) && $_SESSION['role'] == 'admin') {
+    $sql = "SELECT userId, lat, lng FROM users WHERE userId in (SELECT userId FROM rescuers)";
+    $result = $con->query($sql);
+    $rescuers = [];
+    while ($row = $result->fetch_assoc()) {
+        $user = $row['userId'];
+        $temp = [1,$row['lat'],$row['lng']];
+        $sql1 = "SELECT name FROM rescuers WHERE userId = $user";
+        $result1 = $con->query($sql1);
+        $row1 = $result1->fetch_assoc();
+        $temp[] = $row1['name'];
+        $temp[] = $user;
+        $rescuers[] = $temp;
+    }
+} else {
+    header("Location: index.php"); // Redirigir a la página de inicio de sesión
+    exit();
+}
 // Retrieve marker data
-$cursor = $collection->find();
+$cursor = $offersC->find();
 
 // Array of ID
 $data = [];
 
 foreach ($cursor as $document) {
-    foreach ($document['offer'] as $item) {
+    foreach ($document['offers'] as $item) {
             $data[] = $item;
     }
 }
@@ -19,28 +50,34 @@ foreach ($cursor as $document) {
 $markers = [];
 
 foreach ($data as $item) {
-    $con = connect();
-    $userID = $item['idUser'];
-    $sql = "SELECT lat, lng, name, phone FROM citizens WHERE userID = $userID";
+    $userID = $document['idUser'];
+    $sql = "SELECT lat, lng FROM users WHERE userID = $userID";
     $result = $con->query($sql);
     $row = $result->fetch_assoc();
     $lat = $row['lat'];
     $lng = $row['lng'];
-    $desc = "<p>Name: " . $row['name']."</p>";
-    $desc .= "<p>Phone: " . $row['phone'] . "</p>";
-    $desc .= "<p>Products: ";
+    $sql = "SELECT name, phone FROM citizens WHERE userID = $userID";
+    $result = $con->query($sql);
+    $row = $result->fetch_assoc();
+    $desc = "Name: " . $row['name']."<br>";
+    $desc .= "Phone: " . $row['phone'] . "<br>";
+    $desc .= "Products: ";
     foreach($item['products'] as $p) {
         $desc .= $p." ";
     }
-    $desc .= "</p><p>Quantities: ";
+    $desc .= "<br>Quantities: ";
     foreach($item['nProducts'] as $n) {
         $desc .= $n." ";
     }
-    $desc .= "</p>";
-    $markers[] = [$lat, $lng, $desc];
+    $desc .= "<br>";
+    $markers[] = [2,$document['idUser'],$item['id'],$lat, $lng, $desc];
 }
+
+$sql = "SELECT lat, lng FROM users WHERE userId = 1";
+$result = $con->query($sql);
+$row = $result->fetch_assoc();
 
 // Return JSON response
 header('Content-Type: application/json');
-echo json_encode($markers);
+echo json_encode(array_merge([[3,$_SESSION['userId']],[0, $row['lat'], $row['lng'], 1]],$rescuers,$markers));
 ?>

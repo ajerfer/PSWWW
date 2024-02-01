@@ -11,29 +11,35 @@
     <style>
         #map {
             width: 100%;
-            height: 100vh;
+            height: 95vh;
         }
-        #panel {
-            max-height: 200px;
-            overflow-y: auto;
+        .legend {
+            background-color: white;
+            padding: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .legend h4 {
+            margin: 0 0 5px;
+        }
+
+        .legend p {
+            margin: 0;
+        }
+
+        .legend span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            vertical-align: middle;
         }
     </style>
+    
 </head>
 <body>
-    <label>
-        <input type="checkbox" id="rescue" onchange="filterMarkers()"> Rescue cars
-    </label>
-    <label>
-        <input type="checkbox" id="request" onchange="filterMarkers()"> Requests
-    </label>
-    <label>
-        <input type="checkbox" id="offers" onchange="filterMarkers()"> Offers
-    </label>
-
     <div id="map"></div>
-    <div id="panel">
-    <h3>Panel</h3>
-    <ul id="marker-list"></ul>
 </div>
 </body>
 </html>

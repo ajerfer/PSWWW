@@ -30,7 +30,7 @@ if ($result) {
                 header("Location: citizen/citizen_page.php");
                 break;
             case 'rescuer':
-                header("Location: rescuer/rescuer_page.php");
+                header("Location: map.php");
                 break;
             default:
                 // Manejar cualquier otro tipo de usuario según sea necesario
