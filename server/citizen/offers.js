@@ -38,3 +38,35 @@ function changeButtonStyle(section) {
         }
     });
 }
+
+// Function to call the deleteOffer PHP function using AJAX
+function callDeleteOffer(userId, offerId) {
+    // Use the JavaScript confirm() function
+    var confirmation = confirm("Are you sure you want to delete the offer?");
+
+    // Check the user's response
+    if (confirmation) {
+        // Perform AJAX call
+        $.ajax({
+            type: "POST",
+            url: "../edit_mongo.php", // Change to the correct URL
+            data: {
+                action: "deleteOffer", 
+                payload: {
+                    userId: userId,
+                    offerId: offerId
+                }
+            },
+            success: function(response) {
+                console.log(response);
+                // Reload the page after successful creation
+                location.reload();
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    } 
+}
+
+

@@ -13,8 +13,8 @@ session_start();
 include_once "../mongodbconnect.php";
 
 // Save the userId and its associated document
-$userId = 3; // $_SESSION['userId'];
-$documentO = $offersC->findOne(['idUser' => $userId]);
+$userId = "3"; // $_SESSION['userId'];
+$documentO = $offersC->findOne(['userId' => $userId]);
 
 // Divide the offers into 'active' and 'completed' categories
 $offers = ['active' => [], 'completed' => []];
@@ -47,6 +47,7 @@ function dateFormat ($date) {
     <script src="offers.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../../public/styles.css">
     <title>Section Selector</title>
 
     <style>
@@ -94,9 +95,9 @@ function dateFormat ($date) {
                     <li>Products offered: </li>
                     <ul>
                     <?php for ($i = 0; $i < count($offer['products']); $i++): ?>
-                        <?php if ($offer['nProducts'][$i] != 0): ?>
-                            <li><?= $offer['products'][$i]; ?> (<?= $offer['nProducts'][$i]; ?>)</li>
-                        <?php endif; ?>
+                        <!-- ?php if ($offer['nProducts'][$i] != 0): ?> -->
+                            <li><?= $offer['products'][$i] ?> (<?= $offer['nProducts'][$i] ?>)</li>
+                        <!-- ?php endif; ?> -->
                     <?php endfor; ?>
                     </ul>       
                     <!-- Show the state and the corresponding dates -->

@@ -23,23 +23,25 @@ function closePopupBox(id) {
 }
 
 // Function to get quantities from modal inputs
-function getQuantities(n) {
+function getQuantities(announcementId, n) {
     const quantities = [];
-    console.log(quantities);
     for (let i = 0; i < n; i++) {
-        const input = document.querySelector(`[name="input_moda${i}_modal"]`);
-        quantities.push(parseInt(input.value));
+        var input = document.querySelector(`[name="${announcementId}_${i}_input_modal"]`);
+        // Verificar si el valor es NaN, nulo o negativo, y en ese caso, asignar 0
+        const value = (isNaN(parseInt(input.value)) || input.value<0) ? 0 : parseInt(input.value);
+        quantities.push(value);
     }
     console.log(quantities);
     return quantities;
 }
 
 // Function to create an offer
-function callCreateOffer(idUser, idAnnouncement, valores) {
+function callCreateOffer(userId, announcementId, quantities) {
     
+    console.log(quantities);
     var isEmpty = true;
-    for (var i=0; i<valores.length && isEmpty; i++)
-        if (valores[i] > 0)
+    for (var i=0; i<quantities.length && isEmpty; i++)
+        if (quantities[i] > 0)
             isEmpty = false; 
 
     if (isEmpty) {
@@ -52,9 +54,9 @@ function callCreateOffer(idUser, idAnnouncement, valores) {
             data: {
                 action: "createOffer", 
                 payload: {
-                    idUser: idUser,
-                    idAnnouncement: idAnnouncement,
-                    valores: valores                    
+                    userId: userId,
+                    announcementId: announcementId,
+                    quantities: quantities                    
                 } 
             },
             success: function(response) {
@@ -82,7 +84,7 @@ function addProduct() {
         // Update the visualization of the list in the container
         showProducts();
     } else {
-        console.log("Product already selected.");
+        alert("Product already selected.");
     }
 }
 
@@ -143,7 +145,7 @@ function callCreateAnnouncement() {
 }
 
 // Function to call the deletheAnouncement PHP function using AJAX
-function callDeleteAnnouncement(idAnnouncement) {
+function callDeleteAnnouncement(announcementId) {
     // Use the JavaScript confirm() function
     var confirmation = confirm("Are you sure you want to delete the announcement?");
 
@@ -155,7 +157,7 @@ function callDeleteAnnouncement(idAnnouncement) {
             url: "edit_mongo.php", // Change to the correct URL
             data: {
                 action: "deleteAnnouncement", 
-                payload: idAnnouncement 
+                payload: announcementId 
             },
             success: function(response) {
                 console.log(response);

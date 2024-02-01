@@ -24,6 +24,11 @@ foreach ($documentP['items'] as $item) {
     $productsNames[] = $item['name'];
 }
 
+// Delete the empty strings
+$productsNames = array_filter($productsNames, function ($value) {
+    return strlen($value) > 0;
+});
+
 ?>
 
 <!DOCTYPE html>
@@ -73,6 +78,7 @@ foreach ($documentP['items'] as $item) {
             background-color: #fff;
             padding: 20px;
         }
+        
     </style>
 </head>
 <body>
@@ -111,11 +117,11 @@ foreach ($documentP['items'] as $item) {
             <div class="modal-content">
                 <?php foreach ($announcement['products'] as $index => $product): ?>
                     <p><?= $product ?></p>
-                    <input type="number" name="input<?= $index ?>_modal" class="input_modal" min="0" value="0">
+                    <input type="number" name="<?= $announcement['id'] ?>_<?= $index ?>_input_modal" class="validity" min="0" value="0">
                 <?php endforeach; ?>
                 <div class="btn-container">
                     <button onclick="closePopupBox('<?= $announcement['id'] ?>')">Close</button>
-                    <button onclick="callCreateOffer('<?= $userId ?>','<?= $announcement['id'] ?>', getQuantities(<?= count($announcement['products']) ?>))">Create offer</button>
+                    <button onclick="callCreateOffer('<?= $userId ?>','<?= $announcement['id'] ?>', getQuantities('<?= $announcement['id'] ?>', <?= count($announcement['products']) ?>))">Create offer</button>
                 </div>
             </div>
         </div>
@@ -145,17 +151,6 @@ foreach ($documentP['items'] as $item) {
     </div>
 
     <script>
-
-        // // Function to get quantities from modal inputs
-        //     function getQuantities(inputModal, n) {
-        //         const quantities = [];
-        //         for (let i = 0; i < n; i++) {
-        //             const input = document.querySelector(`[name="${inputModal}${i}_modal"]`);
-        //             quantities.push(parseInt(input.value));
-        //         }
-        //         console.log(quantities);
-        //         return quantities;
-        //     }
 
     </script>
 

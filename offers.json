@@ -1,7 +1,7 @@
 {
     "code": 1,
     "message": "Retrieved successfully",
-    "idUser":"3",
+    "userId":"3",
     "offers": [
         {
         "id": "1",
