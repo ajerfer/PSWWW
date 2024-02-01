@@ -23,20 +23,51 @@ function closePopupBox(id) {
 }
 
 // Function to get quantities from modal inputs
-function getQuantities(inputModal, n) {
+function getQuantities(n) {
     const quantities = [];
+    console.log(quantities);
     for (let i = 0; i < n; i++) {
-        const input = document.querySelector(`[name="${inputModal}${i}_modal"]`);
+        const input = document.querySelector(`[name="input_moda${i}_modal"]`);
         quantities.push(parseInt(input.value));
     }
+    console.log(quantities);
     return quantities;
 }
 
 // Function to create an offer
-function createOffer(idAnuncio, valores) {
-    // MISSING: Code to create the offer and redirect to the offer PHP page
-    console.log(`Creating offer for announcement ${idAnuncio} with values:`, valores);
-}
+function callCreateOffer(idUser, idAnnouncement, valores) {
+    
+    var isEmpty = true;
+    for (var i=0; i<valores.length && isEmpty; i++)
+        if (valores[i] > 0)
+            isEmpty = false; 
+
+    if (isEmpty) {
+        alert("No cuantity selected.");
+    } else {
+        // Perform AJAX call
+        $.ajax({
+            type: "POST",
+            url: "edit_mongo.php", // Change to the correct URL
+            data: {
+                action: "createOffer", 
+                payload: {
+                    idUser: idUser,
+                    idAnnouncement: idAnnouncement,
+                    valores: valores                    
+                } 
+            },
+            success: function(response) {
+                console.log(response);
+                // Reload the page after successful creation
+                window.location.href = "citizen/offers.php";
+                alert("Offer created.");
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    }}
 
 // Function to add a product to the selected products list
 function addProduct() {
@@ -112,17 +143,29 @@ function callCreateAnnouncement() {
 }
 
 // Function to call the deletheAnouncement PHP function using AJAX
-function callDeleteAnnouncement() {
+function callDeleteAnnouncement(idAnnouncement) {
     // Use the JavaScript confirm() function
     var confirmation = confirm("Are you sure you want to delete the announcement?");
 
     // Check the user's response
     if (confirmation) {
-        // User clicked "OK"
-        alert("Action confirmed");
-        // You can add more code here to perform some action after confirmation
-    } else {
-        // User clicked "Cancel" or closed the confirmation window
-        alert("Action canceled");
-    }
+        // Perform AJAX call
+        $.ajax({
+            type: "POST",
+            url: "edit_mongo.php", // Change to the correct URL
+            data: {
+                action: "deleteAnnouncement", 
+                payload: idAnnouncement 
+            },
+            success: function(response) {
+                console.log(response);
+                // Reload the page after successful creation
+                window.location.href = "announcements.php";
+                //alert("Announcement deleted.");
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    } 
 }

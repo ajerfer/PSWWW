@@ -7,7 +7,8 @@ session_start();
 //     exit();
 // } 
 
-
+// Save the userId 
+$userId = 3; // $_SESSION['userId'];
 
 include_once "mongodbconnect.php";
 
@@ -76,67 +77,87 @@ foreach ($documentP['items'] as $item) {
 </head>
 <body>
 
-<h1>Announcements List</h1>
+    <h1>Announcements List</h1>
 
-<!-- New Announcement Button -->
-<!-- if ($_SESSION['role'] === 'citizen'): -->
-    <button onclick="openPopupBox('newAnnouncement')">Create Announcement</button>
-<!-- endif; -->
+    <!-- New Announcement Button -->
+    <!-- if ($_SESSION['role'] === 'citizen'): -->
+        <button onclick="openPopupBox('newAnnouncement')">Create Announcement</button>
+    <!-- endif; -->
 
-<!--  Announcement List -->
-<?php foreach ($documentA['announcements'] as $announcement): ?>
-    <!-- Announcement Box -->
-    <div class="announcement-box">
-        <h3>Announcement</h3>
-        <ul>
-            <?php foreach ($announcement['products'] as $string): ?>
-                <li><?php echo htmlspecialchars($string); ?></li>
-            <?php endforeach; ?>
-        </ul>
-        <!-- Button - Only for citizen -->
-        <!-- if ($_SESSION['role'] === 'citizen'): -->
-            <button onclick="openPopupBox(<?= $announcement['id'] ?>)">Make offer</button>
-        <!-- endif; -->
-        <!-- Button - Only for admin -->
-        <!-- if ($_SESSION['role'] === 'admin'): -->
-            <button onclick="callDeleteAnnouncement(<?= $announcement['id'] ?>)">Delete</button>
-        <!-- endif; -->
-    </div>
-    <!-- Popup Offer Box -->
-    <div id="modal<?= $announcement['id'] ?>" class="modal">
+    <!--  Announcement List -->
+    <?php
+    $announcementNumber = 1; // Initialize the announcement number
+    foreach ($documentA['announcements'] as $announcement):
+    ?>    
+        <!-- Announcement Box -->
+        <div class="announcement-box"> 
+            <h3>Announcement <?= $announcementNumber ?></h3>
+            <ul>
+                <?php foreach ($announcement['products'] as $string): ?>
+                    <li><?= $string ?></li>
+                <?php endforeach; ?>
+            </ul>
+            <!-- Button - Only for citizen -->
+            <!-- if ($_SESSION['role'] === 'citizen'): -->
+                <button onclick="openPopupBox('<?= $announcement['id'] ?>')">Make offer</button>
+            <!-- endif; -->
+            <!-- Button - Only for admin -->
+            <!-- if ($_SESSION['role'] === 'admin'): -->
+                <button onclick="callDeleteAnnouncement('<?= $announcement['id'] ?>')">Delete</button>
+            <!-- endif; -->
+        </div>
+        <!-- Popup Offer Box -->
+        <div id="modal<?= $announcement['id'] ?>" class="modal">
+            <div class="modal-content">
+                <?php foreach ($announcement['products'] as $index => $product): ?>
+                    <p><?= $product ?></p>
+                    <input type="number" name="input<?= $index ?>_modal" class="input_modal" min="0" value="0">
+                <?php endforeach; ?>
+                <div class="btn-container">
+                    <button onclick="closePopupBox('<?= $announcement['id'] ?>')">Close</button>
+                    <button onclick="callCreateOffer('<?= $userId ?>','<?= $announcement['id'] ?>', getQuantities(<?= count($announcement['products']) ?>))">Create offer</button>
+                </div>
+            </div>
+        </div>
+        <?php
+        $announcementNumber++; // Increment the announcement number
+    endforeach;
+    ?>
+    <!-- New Announcement Popup Box -->
+    <div id="modalnewAnnouncement" class="modal">
         <div class="modal-content">
-            <?php foreach ($announcement['products'] as $index => $product): ?>
-                <p><?= $product ?></p>
-                <input type="number" name="input<?= $index ?>_modal" class="input_modal" min="0" value="0">
-            <?php endforeach; ?>
+            <h2>New Announcement</h2>
+            <div class="input-container">
+                <label for="productDropdown">Add a product: </label>
+                <select id="productDropdown">
+                    <?php foreach ($productsNames as $productName): ?>
+                        <option value="<?= $productName ?>"><?= $productName ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <button onclick="addProduct()" style="margin-top:10px">Add Product</button>
+            </div>
+            <div id="selectedProductsContainer"></div>
             <div class="btn-container">
-                <button onclick="closePopupBox(<?= $announcement['id'] ?>)">Close</button>
-                <button onclick="createOffer(<?= $announcement['id'] ?>, getQuantities('input_modal', <?= count($announcement['products']) ?>))">Create offer</button>
+                <button onclick="closePopupBox('newAnnouncement')">Close</button>
+                <button onclick="callCreateAnnouncement()">Create</button>
             </div>
         </div>
     </div>
-<?php endforeach; ?>
 
-<!-- New Announcement Popup Box -->
-<div id="modalnewAnnouncement" class="modal">
-    <div class="modal-content">
-        <h2>New Announcement</h2>
-        <div class="input-container">
-            <label for="productDropdown">Add a product: </label>
-            <select id="productDropdown">
-                <?php foreach ($productsNames as $productName): ?>
-                    <option value="<?= $productName ?>"><?= $productName ?></option>
-                <?php endforeach; ?>
-            </select>
-            <button onclick="addProduct()" style="margin-top:10px">Add Product</button>
-        </div>
-        <div id="selectedProductsContainer"></div>
-        <div class="btn-container">
-            <button onclick="closePopupBox('newAnnouncement')">Close</button>
-            <button onclick="callCreateAnnouncement()">Create</button>
-        </div>
-    </div>
-</div>
+    <script>
+
+        // // Function to get quantities from modal inputs
+        //     function getQuantities(inputModal, n) {
+        //         const quantities = [];
+        //         for (let i = 0; i < n; i++) {
+        //             const input = document.querySelector(`[name="${inputModal}${i}_modal"]`);
+        //             quantities.push(parseInt(input.value));
+        //         }
+        //         console.log(quantities);
+        //         return quantities;
+        //     }
+
+    </script>
 
 </body>
 </html>
