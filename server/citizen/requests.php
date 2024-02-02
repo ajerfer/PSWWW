@@ -166,7 +166,7 @@ function dateFormat ($date) {
         <div class="modal-content">
             <h2>New Request</h2>
             <label for="persons_input_modal">Persons :</label>
-            <input type="number" name="persons_input_modal" class="validity" min="1" value="1" style="margin-bottom: 10px;">
+            <input type="number" id="persons_input_modal" class="validity" min="1" value="1" style="margin-bottom: 10px;">
             <div class="input-container">
                 <label for="productDropdown">Add a product: </label>
                 <select id="productDropdown">

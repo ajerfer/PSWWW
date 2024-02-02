@@ -21,6 +21,7 @@ try {
     $productsC = $dataBase->Products;   // Products' container
     $offersC = $dataBase->Offers;  // Offers' container
     $requestsC = $dataBase->Requests;   // Requests' container
+    $vehiclesC  = $dataBase->Vehicles;  // Vehicles' container
     
 } catch (MongoDB\Driver\Exception\Exception $e) {
     echo "Error selecting the collection: " . $e->getMessage();

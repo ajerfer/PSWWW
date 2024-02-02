@@ -110,7 +110,7 @@ function changeButtonStyle(section) {
 // Function to call the createAnnouncement PHP function using AJAX
 function callCreateRequest(userId) {
     
-    const nPersons = parseInt(document.querySelector('[name="persons_input_modal"]').value);
+    const nPersons = parseInt(document.getElementById('persons_input_modal').value);
     
     if (nPersons < 1){
         alert("Persons must be equal or higher than 1.");
