@@ -18,29 +18,6 @@ function getAllProducts() {
     return $productsCollection->find();
 }
 
-function getProductsByCategory() {
-    global $productsCollection;
-
-    $aggregation = [
-        [
-            '$unwind' => '$items'
-        ],
-        [
-            '$match' => [
-                'items.category' => '6'
-            ]
-        ],
-        [
-            '$group' => [
-                '_id' => '$_id',
-                'items' => [
-                    '$push' => '$items'
-                ]
-            ]
-        ]
-    ];
-    return $productsCollection->aggregate($aggregation);
-}
 $categoryFilter = null;
 
 $categoryFilter = isset($_POST['category']) ? $_POST['category'] : [];
