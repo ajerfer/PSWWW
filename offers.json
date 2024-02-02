@@ -5,7 +5,7 @@
     "offers": [
         {
         "id": "1",
-        "idAnnouncement":"0",
+        "announcementId":"0",
         "state": "0", 
         "rescuerId": null,
         "dateCreated": {
@@ -19,7 +19,7 @@
         },
         {
             "id": "2",
-            "idAnnouncement":"1",
+            "announcementId":"1",
             "state": "2", 
             "rescuerId": null,
             "dateCreated": {

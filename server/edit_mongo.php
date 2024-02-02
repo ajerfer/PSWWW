@@ -50,8 +50,20 @@ function createAnnouncement($productsSelection) {
  */
 function deleteAnnouncement($announcementId) {
     global $announcementsC;
+    global $offersC;
 
+    
+    
     try {
+        
+        // Delete the offers associated not completed
+        $cursor = $offersC->find([one]);    
+        foreach($cursor as $document) 
+            foreach($document['offers'] as $offer)
+                if ($offer['announcementId']==$announcementId && $offer['state']!=2)
+                    deleteOffer($document['userId'],$offer['id']);
+
+
         // Find the first document in the collection
         $firstDocument = $announcementsC->findOne([]);
 
@@ -110,7 +122,7 @@ function createOffer($userId,$announcementId,$quantities) {
         "dateAccepted" => null,
         "dateCompleted" => null,
         "products" => $products,
-        "nProducts"=> $quantities
+        "nProducts"=> $arrayQuantities
     ];
 
     try {
@@ -122,7 +134,7 @@ function createOffer($userId,$announcementId,$quantities) {
             
             // Update the user document 
             $updateResult = $offersC->updateOne(
-                ['_id' => $userDoc["_id"]],
+                ['_id' => $userDoc['_id']],
                 ['$push' => ['offers' => $newOffer]]
             );
 
