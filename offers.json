@@ -18,24 +18,24 @@
         "nProducts": [5, 7]
         },
         {
-            "id": "2",
-            "announcementId":"1",
-            "state": "2", 
-            "rescuerId": null,
-            "dateCreated": {
-                "$date": {
-                    "$numberLong": "1644643200000"
-                }},
-            "dateAccepted": {
-                "$date": {
-                    "$numberLong": "1644643400000"
-                }},
-            "dateCompleted": {
-                "$date": {
-                    "$numberLong": "1644643600000"
-                }},
-            "products": ["Water"],
-            "nProducts": [10]
-            }
+        "id": "2",
+        "announcementId":"1",
+        "state": "2", 
+        "rescuerId": null,
+        "dateCreated": {
+            "$date": {
+                "$numberLong": "1644643200000"
+            }},
+        "dateAccepted": {
+            "$date": {
+                "$numberLong": "1644643400000"
+            }},
+        "dateCompleted": {
+            "$date": {
+                "$numberLong": "1644643600000"
+            }},
+        "products": ["Water"],
+        "nProducts": [10]
+        }
     ]
 }

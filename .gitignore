@@ -2,3 +2,7 @@
 server\databaseconnect.php
 
 .gitignore
+
+error.txt
+
+PruebaOffers.json

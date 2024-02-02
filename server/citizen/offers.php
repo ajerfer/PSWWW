@@ -4,7 +4,7 @@
 session_start();
 
 // Verify the user
-// if (!isset($_SESSION['userId']) || ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'citizen')) {
+// if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'citizen')) {
 //     header("Location: ../index.php"); // Redirect to the login page
 //     exit();
 // }
@@ -48,7 +48,7 @@ function dateFormat ($date) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../../../public/styles.css">
-    <title>Section Selector</title>
+    <title>My Offers</title>
 
     <style>
         .seccionButton {

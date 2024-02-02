@@ -163,7 +163,7 @@ function callDeleteAnnouncement(announcementId) {
                 console.log(response);
                 // Reload the page after successful creation
                 window.location.href = "announcements.php";
-                //alert("Announcement deleted.");
+                console.log(response);
             },
             error: function(error) {
                 console.error(error);
