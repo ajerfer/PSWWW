@@ -12,46 +12,68 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
 // Seleccionar la colección de productos
 $productsCollection = $dataBase->Products;
 
+
 function getAllProducts() {
     global $productsCollection;
     return $productsCollection->find();
 }
 
-function getProductsByCategory($category) {
+function getProductsByCategory() {
     global $productsCollection;
-    // Configurar la etapa de agregación
+
     $aggregation = [
         [
-            '$project' => [
+            '$unwind' => '$items'
+        ],
+        [
+            '$match' => [
+                'items.category' => '6'
+            ]
+        ],
+        [
+            '$group' => [
+                '_id' => '$_id',
                 'items' => [
-                    '$filter' => [
-                        'input' => '$items',
-                        'as' => 'item',
-                        'cond' => ['$eq' => ['$$item.category', $category]]
-                    ]
+                    '$push' => '$items'
                 ]
             ]
         ]
     ];
-    return $productsCollection->aggregate($aggregation)->toArray();
+    return $productsCollection->aggregate($aggregation);
 }
 $categoryFilter = null;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category'])) {
-    $categoryFilter = !empty($_POST['category']) ? $_POST['category'] : null;
-}
-if ($categoryFilter === 'all') {
-    $productos = getAllProducts();
-} elseif ($categoryFilter) {
-    $productos = getProductsByCategory($categoryFilter);
+$categoryFilter = isset($_POST['category']) ? $_POST['category'] : [];
+
+if (empty($categoryFilter)) {
+    // Si no hay categorías seleccionadas, obtén todos los productos
+    $products = getAllProducts();
 } else {
-    // Obtener todos los productos si no hay filtro
-    $productos = getAllProducts();
+   // Si hay categorías seleccionadas, filtra los productos por categoría 6
+   foreach ($categoryFilter as $category) {
+        $aggregation = [
+            [
+                '$unwind' => '$items'
+            ],
+            [
+                '$match' => [
+                    'items.category' => $category
+                ]
+            ],
+            [
+                '$group' => [
+                    '_id' => '$_id',
+                    'items' => [
+                        '$push' => '$items'
+                    ]
+                ]
+            ]
+        ];
+        $results[] = $productsCollection->aggregate($aggregation)->toArray();
+    }
+
+    $products = array_merge(...$results);
 }
-
-$uniqueCategories = $productsCollection->distinct('categories', [],['id', 'category_name']);
-
-$productos = $productsCollection->find();
 
 ?>
 
@@ -61,7 +83,7 @@ $productos = $productsCollection->find();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../../public/styles.css">
-    <title>Productos</title>
+    <title>Products</title>
     <style>
         body {
             margin-top: 10px; /* Espacio para el botón fijo */
@@ -94,25 +116,17 @@ $productos = $productsCollection->find();
     <form class="addProductBtn" action="add_product.php" method="post">
         <button type="submit">Add Product</button>
     </form>
-    <h1>Lista de Productos</h1>
-    <form method="post" action="manage_store.php">
-        <label for="category">Filter by Category:</label>
-        <select name="category[]" id="category" multiple>
-            <option value="all" <?= empty($_POST['category']) ? 'selected' : '' ?>>Show All</option>
-            <?php foreach ($uniqueCategories as $category): ?>
-                <option value="<?= $category['id'] ?>" <?= isset($_POST['category']) && in_array($category['id'], (array)$_POST['category']) ? 'selected' : '' ?>>
-                    <?= $category['category_name'] ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+    <h1>List of Products</h1>
+    <form method="get" action="filter_categories.php">
         <button type="submit">Filter</button>
     </form>
-    <?php foreach ($productos as $producto): ?>
+    <?php foreach ($products as $product): ?>
         <div>
             <ul>
-                <?php foreach ($producto['items'] as $item): ?>
-                    <li><?= $item['name']; ?>
+                <?php foreach ($product['items'] as $item): ?>
+                    <li><?= $item['name']; ?> <br>
                         <ul>
+                        <li>Quantity: <?= $item['quantity']; ?></li>
                             <?php foreach ($item['details'] as $detail): ?>
                                     <li><?= $detail['detail_name'] . ': ' . $detail['detail_value']; ?></li>
                             <?php endforeach; ?>
