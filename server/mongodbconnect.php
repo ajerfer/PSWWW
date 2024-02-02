@@ -20,6 +20,7 @@ try {
     $announcementsC = $dataBase->Announcements; // Announcements' container
     $productsC = $dataBase->Products;   // Products' container
     $offersC = $dataBase->Offers;  // Offers' container
+    $requestsC = $dataBase->Requests;   // Requests' container
     
 } catch (MongoDB\Driver\Exception\Exception $e) {
     echo "Error selecting the collection: " . $e->getMessage();

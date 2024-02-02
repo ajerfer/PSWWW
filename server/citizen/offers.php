@@ -95,9 +95,7 @@ function dateFormat ($date) {
                     <li>Products offered: </li>
                     <ul>
                     <?php for ($i = 0; $i < count($offer['products']); $i++): ?>
-                        <!-- ?php if ($offer['nProducts'][$i] != 0): ?> -->
                             <li><?= $offer['products'][$i] ?> (<?= $offer['nProducts'][$i] ?>)</li>
-                        <!-- ?php endif; ?> -->
                     <?php endfor; ?>
                     </ul>       
                     <!-- Show the state and the corresponding dates -->

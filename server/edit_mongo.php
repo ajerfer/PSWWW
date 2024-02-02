@@ -172,12 +172,12 @@ function deleteOffer($userId, $offerId) {
 
     try {
         // Find the user's offers doc
-        $userDoc = $offersC->findOne([]);
+        $userDoc = $offersC->findOne(['userId' => $userId]);
 
         // Check if there is at least one document in the collection
         if ($userDoc) {
            
-            // Delete the announcement wich
+            // Delete the offer 
             $updateResult = $offersC->updateOne(
                 ['_id' => $userDoc['_id']],
                 ['$pull' => ['offers' => ['id' => $offerId]]]
@@ -193,7 +193,92 @@ function deleteOffer($userId, $offerId) {
             echo "Error: No documents found in the collection.";
         }
     } catch (MongoDB\Driver\Exception\Exception $e) {
-        echo "Error deleting announcement: " . $e->getMessage();
+        echo "Error deleting iffer: " . $e->getMessage();
+    }
+}
+
+function createRequest($userId,$selectedProducts,$nPersons) {
+    global $requestsC;
+
+    // Create a new request
+    $newRequest = [
+        "id" => uniqid(),
+        "state" => 0, 
+        "rescuerId" => null,
+        "dateCreated" => new MongoDB\BSON\UTCDateTime((new DateTime())->getTimestamp()*1000+ (120*60) * 1000), // Athens hour
+        "dateAccepted" => null,
+        "dateCompleted" => null,
+        "products" => $selectedProducts,
+        "nPersons"=> $nPersons
+    ];
+
+    try {
+        // Search for the user's offers document
+        $userDoc = $requestsC->findOne(["userId" => $userId]);
+
+        if ($userDoc) {
+            
+            // Update the user document 
+            $updateResult = $requestsC->updateOne(
+                ['_id' => $userDoc['_id']],
+                ['$push' => ['requests' => $newRequest]]
+            );
+
+            // Check if the update was successful
+            if ($updateResult->getModifiedCount() > 0) {
+                exit();
+            } else {
+                echo "Error inserting request.";
+            }
+        } else {// If not exists, made new one
+            $newDocument = [
+                'code' => 1,
+                'message' => "Retrieved successfully",
+                'userId' => $userId,
+                'requests' => [$newRequest] 
+            ];
+
+            $updateResult = $requestsC->insertOne($newDocument);
+
+            // Check if the update was successful
+            if ($updateResult) {
+                exit();
+            } else {
+                echo "Error inserting document.";
+            }
+        }
+    } catch (MongoDB\Driver\Exception\Exception $e) {
+        echo "Error creating resquest: " . $e->getMessage();
+    }
+}
+
+function deleteRequest($userId, $requestId) {
+    global $requestsC;
+
+    try {
+        // Find the user's offers doc
+        $userDoc = $requestsC->findOne(['userId' => $userId]);
+
+        // Check if there is at least one document in the collection
+        if ($userDoc) {
+           
+            // Delete the announcement wich
+            $updateResult = $requestsC->updateOne(
+                ['_id' => $userDoc['_id']],
+                ['$pull' => ['requests' => ['id' => $requestId]]]
+            );
+            
+            // Check if the update was successful
+            if ($updateResult->getModifiedCount() > 0) {
+                echo "Request deleted successfully.";
+            } else {
+                echo "Error deleting request.";
+            }
+        } else {
+            echo "Error: No documents found in the collection.";
+        }
+    } catch (MongoDB\Driver\Exception\Exception $e) {
+        echo "Error deleting request: " . $e->getMessage();
     }
 }
 
@@ -246,7 +331,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 
                 deleteOffer($userId,$offerId);
             } else {
-                echo "Error: Missing parameters for createAnnouncement.";
+                echo "Error: Missing parameters for deleteOffer.";
+            }
+            break;
+            
+        case 'createRequest':
+            if (isset($_POST['payload'])) {
+                $userId = $_POST['payload']['userId'];
+                $selectedProducts = $_POST['payload']['selectedProducts'];
+                $nPersons = $_POST['payload']['nPersons'];
+                
+                createRequest($userId,$selectedProducts,$nPersons);
+            } else {
+                echo "Error: Missing parameters for createRequest.";
+            }
+            break;
+
+        case 'deleteRequest':
+            if (isset($_POST['payload'])) {
+                $userId = $_POST['payload']['userId'];
+                $requestId = $_POST['payload']['requestId'];
+                
+                deleteRequest($userId,$requestId);
+            } else {
+                echo "Error: Missing parameters for deleteRequest.";
             }
             break;
 
