@@ -51,10 +51,10 @@ function changeButtonStyle(section) {
     });
 }
 
-function callLoadItem (userId, itemId, quantity, max) {
+function callLoadItem (userId, itemId, newQuantity, max) {
     
-    if (quantity < 1 || max < quantity){
-        alert("The quantity must be in the interval [1-" + quantity + "].");
+    if (newQuantity < 1 || max < newQuantity){
+        alert("The quantity must be in the interval [1-" + max + "].");
     } else {
         // Perform AJAX call
         $.ajax({
@@ -65,17 +65,29 @@ function callLoadItem (userId, itemId, quantity, max) {
                 payload: {
                     userId: userId,
                     itemId: itemId,
-                    quantity: quantity
+                    newQuantity: newQuantity
                 }
             },
-            success: function(response) {
-                console.log(response);
-                // Reload the page after successful creation
-                location.reload();
-                alert("Item loaded.");
+            success: function(data) {
+                if (data.status === "success") {
+                    console.log(response);
+                    // Reload the page after successful creation
+                    location.reload();
+                    alert("Item loaded.");
+                } else {
+                    // Manejar la respuesta de error
+                    console.error(data.message);
+                }
             },
-            error: function(error) {
-                console.error(error);
+            error: function(xhr, status, error) {
+                // Manejar errores de red u otros errores
+                console.error("Error processing request:", status, error);
+                if (xhr.status === 500) {
+                    // Manejar errores específicos del servidor
+                    console.error("Error interno del servidor:", xhr.responseText);
+                    location.reload();
+                    alert("Item's quantity modified by other user. Try again.");
+                }
             }
         });
     }
