@@ -36,7 +36,6 @@ function showSection(newSection) {
     }
 }
 
-
 function changeButtonStyle(section) {
     // Change the style of the buttons based on the selected section
     var botones = document.querySelectorAll(".seccionButton");
@@ -50,4 +49,34 @@ function changeButtonStyle(section) {
             boton.style.color = "";
         }
     });
+}
+
+function callLoadItem (userId, itemId, quantity, max) {
+    
+    if (quantity < 1 || max < quantity){
+        alert("The quantity must be in the interval [1-" + quantity + "].");
+    } else {
+        // Perform AJAX call
+        $.ajax({
+            type: "POST",
+            url: "../edit_mongo.php", // Change to the correct URL
+            data: {
+                action: "loadItem", 
+                payload: {
+                    userId: userId,
+                    itemId: itemId,
+                    quantity: quantity
+                }
+            },
+            success: function(response) {
+                console.log(response);
+                // Reload the page after successful creation
+                location.reload();
+                alert("Item loaded.");
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    }
 }

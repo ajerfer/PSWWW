@@ -358,6 +358,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             }
             break;
 
+        case 'loadItem':
+            if (isset($_POST['payload'])) {
+                $userId = $_POST['payload']['userId'];
+                $requestId = $_POST['payload']['requestId'];
+                
+                deleteRequest($userId,$requestId);
+            } else {
+                echo "Error: Missing parameters for deleteRequest.";
+            }
+            break;
+
         default:
             echo "Error: Unknown action.";
             break;

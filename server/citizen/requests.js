@@ -132,7 +132,7 @@ function callCreateRequest(userId) {
             success: function(response) {
                 console.log(response);
                 // Reload the page after successful creation
-                window.location.href = "requests.php";
+                location.reload();
                 alert("Request created.");
             },
             error: function(error) {
