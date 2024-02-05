@@ -20,7 +20,7 @@
         {
         "id": "2",
         "announcementId":"1",
-        "state": "2", 
+        "state": "0", 
         "rescuerId": null,
         "dateCreated": {
             "$date": {

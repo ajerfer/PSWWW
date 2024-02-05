@@ -50,7 +50,7 @@ foreach ($cursor as $document) {
 $markers = [];
 
 foreach ($data as $item) {
-    $userID = $document['idUser'];
+    $userID = $document['userId'];
     $sql = "SELECT lat, lng FROM users WHERE userID = $userID";
     $result = $con->query($sql);
     $row = $result->fetch_assoc();
@@ -61,6 +61,7 @@ foreach ($data as $item) {
     $row = $result->fetch_assoc();
     $desc = "Name: " . $row['name']."<br>";
     $desc .= "Phone: " . $row['phone'] . "<br>";
+    $desc .= "Date created: " . $item['dateCreated'] . "<br>";
     $desc .= "Products: ";
     foreach($item['products'] as $p) {
         $desc .= $p." ";
@@ -70,7 +71,58 @@ foreach ($data as $item) {
         $desc .= $n." ";
     }
     $desc .= "<br>";
-    $markers[] = [2,$document['idUser'],$item['id'],$lat, $lng, $desc];
+    
+    $rescuerId = null;
+    if ($item['state'] == "1") {
+        $rescuerId = $item['rescuerId'];
+        $sql = "SELECT name FROM rescuers WHERE userID = $rescuerId";
+        $result = $con->query($sql);
+        $row = $result->fetch_assoc();
+        $desc .= "Rescuer: " . $row['name'] . "<br>";
+        $desc .= "Date collected: " . $item['dateCompleted'] . "<br>";
+    }
+
+    $markers[] = [2,$document['userId'],$item['id'],$item['state'], $rescuerId,$lat, $lng, $desc];
+}
+
+$cursor = $requestsC->find();
+$data = [];
+
+foreach ($cursor as $document) {
+    foreach ($document['requests'] as $item) {
+            $data[] = $item;
+    }
+}
+
+foreach ($data as $item) {
+    $userID = $document['userId'];
+    $sql = "SELECT lat, lng FROM users WHERE userID = $userID";
+    $result = $con->query($sql);
+    $row = $result->fetch_assoc();
+    $lat = $row['lat'];
+    $lng = $row['lng'];
+    $sql = "SELECT name, phone FROM citizens WHERE userID = $userID";
+    $result = $con->query($sql);
+    $row = $result->fetch_assoc();
+    $desc = "Name: " . $row['name']."<br>";
+    $desc .= "Phone: " . $row['phone'] . "<br>";
+    $desc .= "Date created: " . $item['dateCreated'] . "<br>";
+    $desc .= "Products: ";
+    foreach($item['products'] as $p) {
+        $desc .= $p." ";
+    }
+    $desc .= "<br>People: " . $item['nPersons'] . "<br>";
+    $rescuerId = null;
+    if ($item['state'] == "1") {
+        $rescuerId = $item['rescuerId'];
+        $sql = "SELECT name FROM rescuers WHERE userID = $rescuerId";
+        $result = $con->query($sql);
+        $row = $result->fetch_assoc();
+        $desc .= "Rescuer: " . $row['name'] . "<br>";
+        $desc .= "Date collected: " . $item['dateCompleted'] . "<br>";
+    }
+
+    $markers[] = [3,$document['userId'],$item['id'],$item['state'], $rescuerId, $lat, $lng, $desc];
 }
 
 $sql = "SELECT lat, lng FROM users WHERE userId = 1";
@@ -79,5 +131,5 @@ $row = $result->fetch_assoc();
 
 // Return JSON response
 header('Content-Type: application/json');
-echo json_encode(array_merge([[3,$_SESSION['userId']],[0, $row['lat'], $row['lng'], 1]],$rescuers,$markers));
+echo json_encode(array_merge([[4,$_SESSION['userId']],[0, $row['lat'], $row['lng'], 1]],$rescuers,$markers));
 ?>

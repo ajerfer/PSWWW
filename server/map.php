@@ -11,8 +11,9 @@
     <style>
         #map {
             width: 100%;
-            height: 95vh;
+            height: 90vh;
         }
+
         .legend {
             background-color: white;
             padding: 10px;
@@ -20,27 +21,146 @@
             border-radius: 5px;
         }
 
-        .legend h4 {
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px; /* Adjust the margin as needed */
+        }
+
+        .legend-item img {
+            width: 20px; /* Adjust the width as needed */
+            height: 20px; /* Adjust the height as needed */
+            margin-right: 5px; /* Adjust the margin as needed */
+        }
+
+        .tasks {
+            background-color: white;
+            padding: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .tasks h4 {
             margin: 0 0 5px;
         }
 
-        .legend p {
+        .tasks p {
             margin: 0;
         }
 
-        .legend span {
+        .tasks span {
             display: inline-block;
             width: 20px;
             height: 20px;
             margin-right: 5px;
             vertical-align: middle;
         }
+        .filter-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row; /* Align horizontally */
+}
+
+.checkbox-label {
+  position: relative;
+  display: block;
+  padding-left: 30px;
+  margin-right: 10px; /* Adjust spacing between checkboxes */
+  cursor: pointer;
+  user-select: none;
+}
+
+.filter-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.checkbox-label:hover .checkmark {
+  background-color: #ddd;
+}
+
+.filter-checkbox:checked + .checkmark {
+  background-color: #4CAF50;
+  border: 1px solid #45a049;
+}
+
+.checkmark:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+.filter-checkbox:checked + .checkmark:after {
+  display: block;
+}
+
+.checkmark:after {
+  left: 7px;
+  top: 4px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
     </style>
     
 </head>
 <body>
+
     <div id="map"></div>
+    <div class="filter-container">
+        <label class="checkbox-label">
+            <input type="checkbox" class="filter-checkbox" checked="checked" value="taken_requests">
+            <span class="checkmark"></span>
+            Taken requests
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" class="filter-checkbox" checked="checked" value="untaken_requests">
+            <span class="checkmark"></span>
+            Untaken requests
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" class="filter-checkbox" checked="checked" value="offers">
+            <span class="checkmark"></span>
+            Offers 
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" class="filter-checkbox" checked="checked" value="cars_active">
+            <span class="checkmark"></span>
+            Cars with active tasks
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" class="filter-checkbox" checked="checked" value="cars_not_active">
+            <span class="checkmark"></span>
+            Cars without active tasks
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" class="filter-checkbox" checked="checked" value="lines">
+            <span class="checkmark"></span>
+            Lines
+        </label>
 </div>
+
 </body>
 </html>
 

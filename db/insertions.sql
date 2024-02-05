@@ -1,5 +1,6 @@
 INSERT INTO `citizens` (`citizenId`, `userId`, `name`, `surname`, `phone`) VALUES
-(1, 3, 'CitizenName', 'CitizenSurname', '123456789');
+(1, 3, 'CitizenName', 'CitizenSurname', '123456789'),
+(2, 5, 'citizen2', 'CitizenSurname', '645511322');
 
 INSERT INTO `rescuers` (`rescuerId`, `userId`, `name`, `surname`) VALUES
 (1, 2, 'rescuerName1', 'rescuerSurname1'),
@@ -9,4 +10,5 @@ INSERT INTO `users` (`userId`, `username`, `password`, `role`, `lat`, `lng`) VAL
 (1, 'admin', 'password', 'admin', 38.246639, 21.73),
 (2, 'rescuer1', 'rescuer1', 'rescuer', 38.246639, 21.74),
 (3, 'citizen1', 'citizen', 'citizen', 38.246639, 21.735),
-(4, 'rescuer2', 'rescuer2', 'rescuer', 38.246639, 21.74);
+(4, 'rescuer2', 'rescuer2', 'rescuer', 38.246639, 21.74),
+(5, 'citizen2', 'citizen2', 'citizen', 38.246639, 21.732);

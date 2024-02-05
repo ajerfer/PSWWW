@@ -18,7 +18,7 @@
         },
         {
         "id": "2",
-        "state": "2", 
+        "state": "0", 
         "rescuerId": null,
         "dateCreated": {
             "$date": {
