@@ -14,9 +14,9 @@ include_once "../mongodbconnect.php";
 
 // Save the userId and its associated document
 $userId = "4"; // $_SESSION['userId'];
-$vehicleDoc = $vehiclesC.findOne(['userId' => $userId]);
+$vehicleDoc = $vehiclesC->findOne(['userId' => $userId]);
 
-$warehouseDoc = $productsC.findOne();
+$warehouseDoc = $productsC->findOne([]);
 
 $content = ['vehicle' => $vehicleDoc['load'], 'warehouse' => $warehouseDoc['items']];
 
@@ -63,6 +63,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section'])) {
             text-align: left;
         }
 
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+        }
+
     </style>
 </head>
 
@@ -72,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section'])) {
 
     <!-- Section Buttons  (the style stills when the webpage is reloaded) -->
     <button class="seccionButton" onclick="showSection('vehicle')" style="<?= ($section === 'vehicle') ? 'background-color:#333; color:white;' : '' ?>">VEHICLE STORAGE</button>
-    <button class="seccionButton" onclick="showSection('completed')" style="<?= ($section === 'completed') ? 'background-color:#333; color:white;' : '' ?>">WAREHOUSE STORAGE</button>
+    <button class="seccionButton" onclick="showSection('warehouse')" style="<?= ($section === 'warehouse') ? 'background-color:#333; color:white;' : '' ?>">WAREHOUSE STORAGE</button>
     
     <div id="storageContent">
         <?php foreach ($content[$section] as $item): ?>    
@@ -82,27 +100,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section'])) {
                 <ul>
                     <!-- Show the item details -->
                     <li>Quantity: <?= $item['quantity']; ?></li>
-                    <?php foreach ($item['details'] as $detail): ?>
-                        <li><?= $detail['detail_name'] . ': ' . $detail['detail_value']; ?></li>
-                    <?php endforeach; ?>
+                    <?php if (!empty($item['details'])): ?>
+                        <li>Details</li>
+                        <ul>
+                        <?php foreach ($item['details'] as $detail): ?>
+                            <li><?= $detail['detail_name'] . ': ' . $detail['detail_value']; ?></li>
+                        <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
                 </ul>
-                
-                <button onclick="openPopUpBox('<?= $item['id'] ?>')"><?= ($section=='vehicle') ? 'Unload' : 'Load'?></button>
-
-
-                <?php if ($section=="vehicle"):?>
-                <?php elseif ($seciton=="warehouse"): ?>
+                <?php if ($section == 'warehouse'): ?>
+                    <button onclick=" openPopupBox('<?= $item['id'] ?>');">Load</button>
                 <?php endif; ?>
-                
-                <!-- Popup Quantity Box -->
-                <div id="modal<?= $item['id'] ?>" class="modal">
-                    <div class="modal-content">
-                        <label for=">Quantity [1-<?=$item['quantity']?>]</label>
-                        <input type="number" id="<?= $item['id'] ?>" class="validity" min="0" max="<?=$item['quantity']?>" value="0">
-                        <div class="btn-container">
-                            <button onclick="closePopupBox('<?= $announcement['id'] ?>')">Close</button>
-                            <button onclick="callManageItem('<?= $userId ?>','<?= $item['id'] ?>', getQuantities('<?= $announcement['id'] ?>', <?= count($announcement['products']) ?>))">Create offer</button>
-                        </div>
+            </div>
+            <!-- Popup Quantity Box -->
+            <div id="modal<?= $item['id'] ?>" class="modal">
+                <div class="modal-content">
+                    <h4> Quantity [1-<?= $item['quantity'] ?>] </h4>
+                    <input type="number" id="quantity_input_<?= $item['id'] ?>" class="validity" min="1" max="<?= $item['quantity'] ?>" value="1" style="margin-bottom: 20px;">
+                    <div class="btn-container">
+                        <button onclick="closePopupBox('<?= $item['id'] ?>')">Close</button>
+                        <button onclick="callLoadItem('<?= $userId ?>','<?= $item['id'] ?>', getElementById('quantity_input_<?= $item['id'] ?>').value, <?= $item['quantity'] ?>) ">Load</button>
                     </div>
                 </div>
             </div>

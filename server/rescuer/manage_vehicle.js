@@ -36,7 +36,6 @@ function showSection(newSection) {
     }
 }
 
-
 function changeButtonStyle(section) {
     // Change the style of the buttons based on the selected section
     var botones = document.querySelectorAll(".seccionButton");
@@ -50,4 +49,46 @@ function changeButtonStyle(section) {
             boton.style.color = "";
         }
     });
+}
+
+function callLoadItem (userId, itemId, newQuantity, max) {
+    
+    if (newQuantity < 1 || max < newQuantity){
+        alert("The quantity must be in the interval [1-" + max + "].");
+    } else {
+        // Perform AJAX call
+        $.ajax({
+            type: "POST",
+            url: "../edit_mongo.php", // Change to the correct URL
+            data: {
+                action: "loadItem", 
+                payload: {
+                    userId: userId,
+                    itemId: itemId,
+                    newQuantity: newQuantity
+                }
+            },
+            success: function(data) {
+                if (data.status === "success") {
+                    console.log(response);
+                    // Reload the page after successful creation
+                    location.reload();
+                    alert("Item loaded.");
+                } else {
+                    // Manejar la respuesta de error
+                    console.error(data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                // Manejar errores de red u otros errores
+                console.error("Error processing request:", status, error);
+                if (xhr.status === 500) {
+                    // Manejar errores específicos del servidor
+                    console.error("Error interno del servidor:", xhr.responseText);
+                    location.reload();
+                    alert("Item's quantity modified by other user. Try again.");
+                }
+            }
+        });
+    }
 }

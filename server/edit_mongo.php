@@ -282,6 +282,70 @@ function deleteRequest($userId, $requestId) {
     }
 }
 
+function loadItem($userId, $itemId, $newQuantity) {
+    global $productsC;
+    global $vehiclesC;
+
+    try {
+        // Find the vehicle's  & warehouse docs
+        $vehicleDoc = $requestsC->findOne(['userId' => $userId]);
+        $warehouseDoc = $productsC->findOne([]);
+
+        // Check documents
+        if ($vehicleDoc && $warehouseDoc) {
+           
+            $item = "";
+            foreach ($warehouseDoc['items'] as $i)
+                if ($i['id'] == $itemId) {
+                    $item = $i;
+                }
+
+            if ($item['quantity'] < $newQuantity) {
+                // Si hay un error, devolver una respuesta de error
+                $response = array("status" => "error", "message" => "modified");
+                http_response_code(500); // Establecer código de estado HTTP 500 (Internal Server Error)
+                echo json_encode($response);
+                return;
+            }
+
+            // Decrement the quantity
+            $updateResult = $yourCollection->updateOne(
+                ['_id' => $warehouseDoc['_id'], 'items.id' => $itemId],
+                ['$inc' => ['items.$.quantity' => -$newQuantity]]
+            );
+            
+            // Check if the update was successful
+            if ($updateResult->getModifiedCount() > 0) {
+                echo "Item quantity decremented.";
+
+                $result = $collection->findOne([
+                    '_id' => $warehouseDoc['_id'],
+                    'items.id' => $itemId
+                ]);
+
+                if ($result) {
+                    $updateResult = $yourCollection->updateOne(
+                        ['_id' => $warehouseDoc['_id'], 'items.id' => $itemId],
+                        ['$inc' => ['items.$.quantity' => -$newQuantity]]
+                    );
+                } else {
+                    $item['quantity'] = $newQuantity;
+                    
+                }
+
+
+            } else {
+                echo "Error deleting request.";
+            }
+
+        } else {
+            echo "Error: No documents found in the collection.";
+        }
+    } catch (MongoDB\Driver\Exception\Exception $e) {
+        echo "Error deleting request: " . $e->getMessage();
+    }
+}
+
 
 //------------------------CHOOSING FUNCTION------------------------//
 
@@ -355,6 +419,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 deleteRequest($userId,$requestId);
             } else {
                 echo "Error: Missing parameters for deleteRequest.";
+            }
+            break;
+
+        case 'loadItem':
+            if (isset($_POST['payload'])) {
+                $userId = $_POST['payload']['userId'];
+                $itemId = $_POST['payload']['itemId'];
+                $newQuantity= $_POST['payload']['newQuantity'];
+                
+                loadItem($userId,$itemId, $newQuantity);
+            } else {
+                echo "Error: Missing parameters for loadItem.";
             }
             break;
 
