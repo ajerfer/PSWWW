@@ -68,26 +68,51 @@ function callLoadItem (userId, itemId, newQuantity, max) {
                     newQuantity: newQuantity
                 }
             },
-            success: function(data) {
-                if (data.status === "success") {
-                    console.log(response);
-                    // Reload the page after successful creation
-                    location.reload();
+            success: function(response) {
+                console.log(response);
+                // Reload the page after successful creation
+                location.reload();
+
+                if (response == "Item loaded correctly.")
                     alert("Item loaded.");
-                } else {
-                    // Manejar la respuesta de error
-                    console.error(data.message);
+                else if (response == "Error: quantity modified.")
+                    alert("Quantity modified by other user. Try again.");
+                else
+                    alert ("Error. Try again.");
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    }
+}
+
+function callUnloadVehicle (userId) {
+    
+    var confirmation = confirm("Are you sure you want to unload your vehicle?");
+
+    // Check the user's response
+    if (confirmation) {
+        // Perform AJAX call
+        $.ajax({
+            type: "POST",
+            url: "../edit_mongo.php", // Change to the correct URL
+            data: {
+                action: "unloadVehicle", 
+                payload: {
+                    userId: userId,
                 }
             },
-            error: function(xhr, status, error) {
-                // Manejar errores de red u otros errores
-                console.error("Error processing request:", status, error);
-                if (xhr.status === 500) {
-                    // Manejar errores específicos del servidor
-                    console.error("Error interno del servidor:", xhr.responseText);
-                    location.reload();
-                    alert("Item's quantity modified by other user. Try again.");
-                }
+            success: function(response) {
+                console.log(response);
+                // Reload the page after successful creation
+                location.reload();
+
+                if (empty(response))
+                    alert("Error. Try again.");
+            },
+            error: function(error) {
+                console.error(error);
             }
         });
     }

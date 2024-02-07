@@ -286,9 +286,11 @@ function loadItem($userId, $itemId, $newQuantity) {
     global $productsC;
     global $vehiclesC;
 
+    if (!is_int($newQuantity))  $newQuantity = intval($newQuantity);
+
     try {
         // Find the vehicle's  & warehouse docs
-        $vehicleDoc = $requestsC->findOne(['userId' => $userId]);
+        $vehicleDoc = $vehiclesC->findOne(['userId' => $userId]);
         $warehouseDoc = $productsC->findOne([]);
 
         // Check documents
@@ -298,54 +300,104 @@ function loadItem($userId, $itemId, $newQuantity) {
             foreach ($warehouseDoc['items'] as $i)
                 if ($i['id'] == $itemId) {
                     $item = $i;
+                    break;
                 }
 
             if ($item['quantity'] < $newQuantity) {
                 // Si hay un error, devolver una respuesta de error
-                $response = array("status" => "error", "message" => "modified");
-                http_response_code(500); // Establecer código de estado HTTP 500 (Internal Server Error)
-                echo json_encode($response);
+                echo "Error: quantity modified.";
                 return;
             }
 
             // Decrement the quantity
-            $updateResult = $yourCollection->updateOne(
+            $updateResult = $productsC->updateOne(
                 ['_id' => $warehouseDoc['_id'], 'items.id' => $itemId],
                 ['$inc' => ['items.$.quantity' => -$newQuantity]]
             );
             
             // Check if the update was successful
             if ($updateResult->getModifiedCount() > 0) {
-                echo "Item quantity decremented.";
 
-                $result = $collection->findOne([
-                    '_id' => $warehouseDoc['_id'],
-                    'items.id' => $itemId
+                $result = $vehiclesC->findOne([
+                    '_id' => $vehicleDoc['_id'],
+                    'load.id' => $itemId
                 ]);
+                //print_r($result);
 
                 if ($result) {
-                    $updateResult = $yourCollection->updateOne(
-                        ['_id' => $warehouseDoc['_id'], 'items.id' => $itemId],
-                        ['$inc' => ['items.$.quantity' => -$newQuantity]]
+                    $updateResult = $vehiclesC->updateOne(
+                        ['userId' => $userId, 'load.id' => $itemId],
+                        ['$inc' => ['load.$.quantity' => $newQuantity]]
                     );
                 } else {
                     $item['quantity'] = $newQuantity;
                     
+                    $updateResult = $vehiclesC->updateOne(
+                        ['_id' => $vehicleDoc['_id']],
+                        ['$push' => ['load' => $item]]);
                 }
+                
+                if ($updateResult->getModifiedCount() <= 0) {
+                    echo "Error adding items.";
+                } else
+                    echo "Item loaded correctly.";
 
 
             } else {
-                echo "Error deleting request.";
+                echo "Error changing quantity.";
             }
 
         } else {
             echo "Error: No documents found in the collection.";
         }
     } catch (MongoDB\Driver\Exception\Exception $e) {
-        echo "Error deleting request: " . $e->getMessage();
+        echo "Error loading item: " . $e->getMessage();
     }
 }
 
+
+function unloadVehicle($userId) {
+    global $productsC;
+    global $vehiclesC;
+
+
+    try {
+        // Find the vehicle's  & warehouse docs
+        $vehicleDoc = $vehiclesC->findOne(['userId' => $userId]);
+        $warehouseDoc = $productsC->findOne([]);
+
+        // Check documents
+        if ($vehicleDoc && $warehouseDoc) {
+           
+            $item = "";
+            foreach ($vehicleDoc['load'] as $i) {
+                $updateResult = $productsC->updateOne(
+                    ['_id' => $warehouseDoc['_id'], 'items.id' => $i['id']],
+                    ['$inc' => ['items.$.quantity' => intval($i['quantity'])]]
+                );
+                if ($updateResult->getModifiedCount() <=0) {
+                    echo "Error adding quantity. ";
+                }
+            }
+
+            // Change the vehicle doc.
+            $updateResult = $vehiclesC->updateOne(
+                ['userId' => $userId],
+                ['$set' => ['load' => []]]
+            );
+            
+            // Check if the update was successful
+            if ($updateResult->getModifiedCount() <= 0) {
+                echo "Error changing load.";
+            }
+
+        } else {
+            echo "Error: No documents found in the collection.";
+        }
+    } catch (MongoDB\Driver\Exception\Exception $e) {
+        echo "Error unloading vehicle: " . $e->getMessage();
+    }
+}
 
 //------------------------CHOOSING FUNCTION------------------------//
 
@@ -434,6 +486,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             }
             break;
 
+            case 'unloadVehicle':
+                if (isset($_POST['payload'])) {
+                    $userId = $_POST['payload']['userId'];
+                    
+                    unloadVehicle($userId);
+                } else {
+                    echo "Error: Missing parameters for unloadVehicle.";
+                }
+                break;
+    
         default:
             echo "Error: Unknown action.";
             break;

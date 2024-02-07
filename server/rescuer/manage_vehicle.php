@@ -88,11 +88,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section'])) {
 
     <h1>My Vehicle</h1>
 
-    <!-- Section Buttons  (the style stills when the webpage is reloaded) -->
-    <button class="seccionButton" onclick="showSection('vehicle')" style="<?= ($section === 'vehicle') ? 'background-color:#333; color:white;' : '' ?>">VEHICLE STORAGE</button>
-    <button class="seccionButton" onclick="showSection('warehouse')" style="<?= ($section === 'warehouse') ? 'background-color:#333; color:white;' : '' ?>">WAREHOUSE STORAGE</button>
-    
+   
     <div id="storageContent">
+
+        <!-- Section Buttons  (the style stills when the webpage is reloaded) -->
+        <button class="seccionButton" onclick="showSection('vehicle')" style="<?= ($section === 'vehicle') ? 'background-color:#333; color:white;' : '' ?>">VEHICLE STORAGE</button>
+        <button class="seccionButton" onclick="showSection('warehouse')" style="<?= ($section === 'warehouse') ? 'background-color:#333; color:white;' : '' ?>">WAREHOUSE STORAGE</button>
+        
+        <div>
+        <?php if ($section == 'vehicle'): ?>
+            <button onclick="callUnloadVehicle(<?= $userId ?>)" style="margin-top: 10px;">Unload Vehicle</button>
+        <?php endif; ?>
+        </div>
+
         <?php foreach ($content[$section] as $item): ?>    
             <!-- Item Box -->
             <div class="item-box"> 
