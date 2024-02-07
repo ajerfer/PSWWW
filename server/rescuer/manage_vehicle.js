@@ -108,7 +108,7 @@ function callUnloadVehicle (userId) {
                 // Reload the page after successful creation
                 location.reload();
 
-                if (empty(response))
+                if (response.length == 0)
                     alert("Error. Try again.");
             },
             error: function(error) {

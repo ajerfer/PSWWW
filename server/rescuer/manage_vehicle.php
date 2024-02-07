@@ -20,14 +20,21 @@ $warehouseDoc = $productsC->findOne([]);
 
 $content = ['vehicle' => $vehicleDoc['load'], 'warehouse' => $warehouseDoc['items']];
 
-// Set the initial value for the section variable
-$section = isset($_SESSION['section']) ? $_SESSION['section'] : 'vehicle';
 
-// Change the section based on the POST request
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section'])) {
-    $_SESSION['section'] = $_POST['section'];
-    $section = $_POST['section'];
+// Change the content depending the rescuer position (as implemented the first condition is always true)
+$isNear = false;
+if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['isNear']) && isset($_POST['userId']) && $_POST['userId']==$userId) {
+    $_SESSION['isNear'] = $_POST['isNear'];
+    $isNear = $_POST['isNear'];
 }
+
+// Change the section based on the POST request (if isNear)
+$section = isset($_SESSION['section']) ? $_SESSION['section'] : 'vehicle';
+if ($isNear && $_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['section'])) {
+    file_put_contents("../error.txt","Primer if \n", FILE_APPEND);
+    $section = $_POST['section'];
+    $_SESSION['section'] = $_POST['section'];
+} 
 
 ?>
 <!DOCTYPE html>
@@ -93,7 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section'])) {
 
         <!-- Section Buttons  (the style stills when the webpage is reloaded) -->
         <button class="seccionButton" onclick="showSection('vehicle')" style="<?= ($section === 'vehicle') ? 'background-color:#333; color:white;' : '' ?>">VEHICLE STORAGE</button>
+        <?php if ($isNear): ?>
         <button class="seccionButton" onclick="showSection('warehouse')" style="<?= ($section === 'warehouse') ? 'background-color:#333; color:white;' : '' ?>">WAREHOUSE STORAGE</button>
+        <?php endif; ?>
         
         <div>
         <?php if ($section == 'vehicle'): ?>
