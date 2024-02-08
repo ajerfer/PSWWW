@@ -4,16 +4,16 @@
 session_start();
 
 // Verify the user
-// if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'rescuer')) {
-//     header("Location: ../index.php"); // Redirect to the login page
-//     exit();
-// }
+if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'rescuer') {
+    header("Location: ../index.php"); // Redirect to the login page
+    exit();
+}
 
 // Include MongoDB connection file
 include_once "../mongodbconnect.php";
 
 // Save the userId and its associated document
-$userId = "4"; // $_SESSION['userId'];
+$userId =  $_SESSION['userId'];
 $vehicleDoc = $vehiclesC->findOne(['userId' => $userId]);
 
 $warehouseDoc = $productsC->findOne([]);
@@ -22,10 +22,13 @@ $content = ['vehicle' => $vehicleDoc['load'], 'warehouse' => $warehouseDoc['item
 $categories = $warehouseDoc['categories'];
 
 // Change the content depending the rescuer position (as implemented the first condition is always true)
-$isNear = true;
+$isNear =  false;
+
 if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['isNear']) && isset($_POST['userId']) && $_POST['userId']==$userId) {
     $_SESSION['isNear'] = $_POST['isNear'];
     $isNear = $_POST['isNear'];
+    echo "isNear = $isNear\n";
+    $isNear = true;
 }
 
 // Change the section based on the POST request (if isNear)
