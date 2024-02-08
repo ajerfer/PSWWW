@@ -2,22 +2,19 @@
 session_start();
 include_once '../mongodbconnect.php';
 
-// Verificar si el usuario ha iniciado sesión y es un administrador
 if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../index.php"); // Redirigir a la página de inicio de sesión
+    header("Location: ../index.php");
     exit();
 }
 
-// Seleccionar la colección de productos
 $productsCollection = $dataBase->Products;
 
-// Obtener datos del formulario
 $itemId = $_POST['itemId'];
 $newName = $_POST['itemName'];
 $newQuantity = $_POST['itemQuantity'];
 $newDetails = isset($_POST['detailName']) ? $_POST['detailName'] : [];
 $newValues = isset($_POST['detailValue']) ? $_POST['detailValue'] : [];
-// Buscar el item en la colección
+
 $filter = ['items.id' => $itemId];
 $update = [
     '$set' => [
@@ -27,7 +24,6 @@ $update = [
     ],
 ];
 
-// Agregar los nuevos detalles al array
 foreach ($newDetails as $index => $newDetail) {
     $update['$set']['items.$.details'][$index] = [
         'detail_name' => $newDetail,
@@ -35,7 +31,6 @@ foreach ($newDetails as $index => $newDetail) {
     ];
 }
 
-// Actualizar el documento en la base de datos
 $result = $productsCollection->updateOne($filter, $update);
 
 if ($result->getModifiedCount() > 0) {
@@ -44,6 +39,6 @@ if ($result->getModifiedCount() > 0) {
     echo "No changes were made.";
     
 }
-echo '<br><br><a href="manage_store.php">Come back to manage the store</a>';
+echo '<br><br><a href="manage_store.php">Back to manage the store</a>';
 exit();
 ?>

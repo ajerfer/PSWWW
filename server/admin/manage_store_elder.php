@@ -2,14 +2,11 @@
 session_start();
 include_once '../mongodbconnect.php';
 
-
-// Verificar si el usuario ha iniciado sesión y es un administrador
 if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../index.php"); // Redirigir a la página de inicio de sesión
+    header("Location: ../index.php"); 
     exit();
 }
 
-// Seleccionar la colección de productos
 $productsCollection = $dataBase->Products;
 
 
@@ -23,10 +20,8 @@ $categoryFilter = null;
 $categoryFilter = isset($_POST['category']) ? $_POST['category'] : [];
 
 if (empty($categoryFilter)) {
-    // Si no hay categorías seleccionadas, obtén todos los productos
     $products = getAllProducts();
 } else {
-   // Si hay categorías seleccionadas, filtra los productos por categoría 6
    foreach ($categoryFilter as $category) {
         $aggregation = [
             [
@@ -55,7 +50,7 @@ if (empty($categoryFilter)) {
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -63,7 +58,7 @@ if (empty($categoryFilter)) {
     <title>Products</title>
     <style>
         body {
-            margin-top: 10px; /* Espacio para el botón fijo */
+            margin-top: 10px;
         }
 
         .backBtn {
@@ -79,7 +74,7 @@ if (empty($categoryFilter)) {
         .addProductBtn {
             position: absolute;
             top: 10px;
-            right: 70px; /* Ajusta la posición según tu diseño */
+            right: 70px;
         }
     </style>
 </head>
