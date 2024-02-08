@@ -14,6 +14,7 @@
             }},
         "dateAccepted": null,
         "dateCompleted": null,
+        "productsId": ["16","20"],
         "products": ["Water", "Bread"],
         "nProducts": [5, 7]
         },
@@ -34,6 +35,7 @@
             "$date": {
                 "$numberLong": "1644643600000"
             }},
+        "productsId": ["16"],
         "products": ["Water"],
         "nProducts": [10]
         }

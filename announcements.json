@@ -4,18 +4,22 @@
     "announcements": [
         {
         "id": "0",
+        "productsId": ["16","20"],
         "products": ["Water", "Bread"]
         },
         {
         "id": "1",
+        "productsId": ["25","31"],
         "products": ["Spaghetti", "Disposable gloves"]
         },
         {
         "id": "2",
+        "productsId": ["66","91"],
         "products": ["Socks", "Cereal bar"]
         },
         {
         "id": "3",
+        "productsId": ["90","99"],
         "products": ["Condensed milk", "Thermos"]
         }
     ]
