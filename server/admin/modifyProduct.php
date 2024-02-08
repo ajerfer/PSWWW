@@ -2,48 +2,44 @@
 session_start();
 include_once '../mongodbconnect.php';
 
-// Verificar si el usuario ha iniciado sesión y es un administrador
 if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../index.php"); // Redirigir a la página de inicio de sesión
+    header("Location: ../index.php"); 
     exit();
 }
 
-// Seleccionar la colección de productos
 $productsCollection = $dataBase->Products;
 
-// Obtener datos del formulario de modificación
 $itemId = $_POST['itemId'];
 
-// Buscar el item en la colección
-$productos = $productsCollection->find();
-foreach ($productos as $producto) {
-    foreach ($producto['items'] as $item) {
+$products = $productsCollection->find();
+foreach ($products as $product) {
+    foreach ($product['items'] as $item) {
         if ($item['id'] == $itemId) {
             $selectedItem = $item;
-            break 2; // Salir de ambos bucles
+            break 2;
         }
     }
 }
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <script src="add_delete_detail.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../../public/styles.css">
-    <title>Modificar Item</title>
+    <title>Modify Item</title>
 </head>
 <body>
-    <h1>Modificar Item</h1>
+    <h1>Modify Item</h1>
 
     <?php if ($selectedItem): ?>
         <form action="save_changes_product.php" method="post">
             <input type="hidden" name="itemId" value="<?= $itemId ?>">
-            <label for="itemName">Nombre del Item:</label>
+            <label for="itemName">Item name:</label>
             <input type="text" id="itemName" name="itemName" value="<?= $selectedItem['name'] ?>" required>
             
-            <h3>Detalles del Item:</h3>
+            <h3>Item details:</h3>
             <ul id="detailsList">
                 <li> 
                     <label for="itemQuantity">Quantity:</label> 
@@ -66,9 +62,9 @@ foreach ($productos as $producto) {
             <button type="submit">Save</button>
         </form>
     <?php else: ?>
-        <p>Item no encontrado.</p>
+        <p>Item not found</p>
     <?php endif; ?>
     <br>
-    <a href="manage_store.php">Volver a la Gestión de Almacén</a>
+    <a href="manage_store.php">Back to manage store</a>
 </body>
 </html>
