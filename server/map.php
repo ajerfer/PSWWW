@@ -123,6 +123,11 @@
 }
 
         /* Styles for the overlay/modal */
+        body.overlay-open {
+            overflow: hidden;
+        }
+
+
         .overlay {
             display: none;
             position: fixed;
@@ -157,8 +162,7 @@
 
         /* Style for the iframe */
         .iframe-container {
-            height: 400px; /* Adjust the height as needed */
-            overflow: auto;
+            height: 500px; /* Adjust the height as needed */
         }
 
         /* Style for the iframe itself */
@@ -207,9 +211,9 @@
 </div>
 
 <div class="overlay" id="dialogOverlay">
-    <div class="modal">
+    <div class="modal">     
         <div class="iframe-container">
-            <iframe src="./rescuer/manage_vehicle.php" frameborder="0"></iframe>
+            <iframe id="vehicleBox" frameborder="0"></iframe>
         </div>
     </div>
 </div>
