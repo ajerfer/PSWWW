@@ -1,16 +1,13 @@
 <?php
 session_start();
 
-// Verificar si el usuario ha iniciado sesión y es un administrador
 if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../index.php"); // Redirigir a la página de inicio de sesión
+    header("Location: ../index.php"); 
     exit();
 }
 
 include_once '../mongodbconnect.php';
 
-
-// Seleccionar la colección de productos
 $warehouseDoc = $productsC->findOne([]); 
 
 $items = $warehouseDoc['items'];
@@ -20,7 +17,7 @@ $categories = $warehouseDoc['categories'];
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <script src="manage_store.js"></script>
     <meta charset="UTF-8">
@@ -44,7 +41,7 @@ $categories = $warehouseDoc['categories'];
         .addProductBtn {
             position: absolute;
             top: 10px;
-            right: 70px; /* Ajusta la posición según tu diseño */
+            right: 70px;
         }
         .filter-box {
             border: 1px solid #ccc;
@@ -111,11 +108,9 @@ $categories = $warehouseDoc['categories'];
     </div>
 
     <?php foreach ($items as $item): ?>
-        <!-- Item Box -->
         <div class="item-box" data-category="<?= $item['category'] ?>">
             <h4><?= $item['name'] ?> </h4>
             <ul>
-                <!-- Show the item details -->
                 <li>Quantity: <?= $item['quantity']; ?></li>
                 <?php if (!empty($item['details'])): ?>
                     <li>Details</li>
