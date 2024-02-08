@@ -355,12 +355,19 @@ $(document).ready(function() {
                             storageButton.addEventListener('click', function () {
                                 document.getElementById('dialogOverlay').style.display = 'flex';
 
-                                var exitButton = document.querySelector('.openStorage');
-                                if (exitButton) {
-                                    exitButton.addEventListener('click', function() {
-                                        document.getElementById('dialogOverlay').style.display = 'none';
-                                    });
+                                var closeButton = document.createElement('span');
+                                closeButton.innerHTML = '&times;'; // '×' character for close icon
+                                closeButton.className = 'close';
+                                closeButton.onclick = closeWindow;
+
+                                // Append the close button to the modal
+                                document.getElementById('dialogOverlay').querySelector('.modal').appendChild(closeButton);
+
+                                function closeWindow() {
+                                    var dialogOverlay = document.getElementById('dialogOverlay');
+                                    dialogOverlay.style.display = 'none';
                                 }
+                                        
                             });
                         }
                     });

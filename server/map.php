@@ -208,7 +208,6 @@
 
 <div class="overlay" id="dialogOverlay">
     <div class="modal">
-        <span class="close" onclick="closeDialog()">&times;</span>
         <div class="iframe-container">
             <iframe src="./rescuer/manage_vehicle.php" frameborder="0"></iframe>
         </div>
