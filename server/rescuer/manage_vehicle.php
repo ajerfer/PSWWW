@@ -56,7 +56,6 @@ $isNear = ($distance <= 100 ? true : false);
 // Change the section based on the POST request (if isNear)
 $section = isset($_SESSION['section']) ? $_SESSION['section'] : 'vehicle';
 if ($isNear && $_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['section'])) {
-    file_put_contents("../error.txt","Primer if \n", FILE_APPEND);
     $section = $_POST['section'];
     $_SESSION['section'] = $_POST['section'];
 } 

@@ -179,21 +179,90 @@ function acceptButtonListener (marker,rescuer,id,element,type) {
                         updateDatabase(element[1], element[2], null,"0", null,databaseTypes[type]);
                         rescuer.task -= 1;
                     });
+
                     var completeButton = insertion.querySelector('.complete');
                     completeButton.addEventListener('click', function () {
                         if (distance(marker.getLatLng(),rescuer.getLatLng()) <= 50) {
-                            tasks.removeChild(insertion);
-                            deleteLine(id);
-                            marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
-                            updateDatabase(element[1], element[2], null,"2", null, databaseTypes[type]);
-                            rescuer.task -= 1;
-                            rescuer.bindPopup('Name: '+rescuer.name+'<br>Active Tasks: '+ rescuer.task +
-                                              '<br><button class="openStorage">Open storage</button>');
+                            if (databaseTypes[type] == "offer") {
+                                (marker.load).forEach( function(product,indexMarker) {
+                                    var productIndex = rescuer.load.indexOf(product);
+                                    if (productIndex !== -1) {
+                                        rescuer.quantity[productIndex] += marker.quantity[indexMarker];
+                                    }
+                                    else {
+                                        rescuer.load.push(product);
+                                        rescuer.quantity.push(marker.quantity[indexMarker]);
+                                    }
+                                });
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: "../edit_mongo.php", // Change to the correct URL
+                                    data: {
+                                        action: "CompleteOffer", 
+                                        payload: {
+                                            userId: marker.user,
+                                            rescuerId: rescuer.id,
+                                            offerId: marker.id
+                                        }
+                                    },
+                                    success: function(response) {
+                                        console.log(response);
+                                    },
+                                    error: function(error) {
+                                        console.error(error);
+                                    }
+                                });
+
+                                tasks.removeChild(insertion);
+                                deleteLine(id);
+                                marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
+                                updateDatabase(element[1], element[2], null,"2", null, databaseTypes[type]);
+                                rescuer.task -= 1; 
+
+                            } else if (databaseTypes[type] == "request") {
+
+                                var productIndex = rescuer.load.indexOf(marker.load);
+                                if (productIndex !== -1 && rescuer.quantity[productIndex] >= marker.quantity) {
+                                    rescuer.quantity[productIndex] -= marker.quantity;
+
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "../edit_mongo.php",
+                                        data: {
+                                            action: "CompleteRequest", 
+                                            payload: {
+                                                userId: marker.user,
+                                                rescuerId: rescuer.id,
+                                                requestId: marker.id
+                                            }
+                                        },
+                                        success: function(response) {
+                                            console.log(response);
+                                        },
+                                        error: function(error) {
+                                            console.error(error);
+                                        }
+                                    });
+
+                                    tasks.removeChild(insertion);
+                                    deleteLine(id);
+                                    marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
+                                    updateDatabase(element[1], element[2], null,"2", null, databaseTypes[type]);
+                                    rescuer.task -= 1; 
+
+                                }
+                                else {
+                                    alert("The vehicle does not have sufficient items.");
+                                }
+                            }
+                        } else {
+                            alert("The vehicle is too far from the task.")
                         }
                     });
                 }
                 else {
-                    alert("Ya tienes 4 tareas aceptadas.");
+                    alert("You have accepted 4 tasks.");
                 }
             });
         }
@@ -221,10 +290,81 @@ function addToTasks(marker,element,id,type) {
     var completeButton = insertion.querySelector('.complete');
     completeButton.addEventListener('click', function () {
         if (distance(marker.getLatLng(),rescuer.getLatLng()) <= 50) {
-            tasks.removeChild(insertion);
-            deleteLine(id);
-            marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
-            updateDatabase(element[1], element[2], new Date().getTime(),"2", null, databaseTypes[type]);
+            if (databaseTypes[type] == "offer") {
+                (marker.load).forEach( function(product,indexMarker) {
+                    var productIndex = rescuer.load.indexOf(product);
+                    if (productIndex !== -1) {
+                        rescuer.quantity[productIndex] += marker.quantity[indexMarker];
+                    }
+                    else {
+                        rescuer.load.push(product);
+                        rescuer.quantity.push(marker.quantity[indexMarker]);
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "../edit_mongo.php", // Change to the correct URL
+                    data: {
+                        action: "CompleteOffer", 
+                        payload: {
+                            userId: marker.user,
+                            rescuerId: rescuer.id,
+                            offerId: marker.id
+                        }
+                    },
+                    success: function(response) {
+                        console.log(response);
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+
+                tasks.removeChild(insertion);
+                deleteLine(id);
+                marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
+                updateDatabase(element[1], element[2], null,"2", null, databaseTypes[type]);
+                rescuer.task -= 1; 
+
+            } else if (databaseTypes[type] == "request") {
+
+                var productIndex = rescuer.load.indexOf(marker.load);
+                if (productIndex !== -1 && rescuer.quantity[productIndex] >= marker.quantity) {
+                    rescuer.quantity[productIndex] -= marker.quantity;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "../edit_mongo.php",
+                        data: {
+                            action: "CompleteRequest", 
+                            payload: {
+                                userId: marker.user,
+                                rescuerId: rescuer.id,
+                                requestId: marker.id
+                            }
+                        },
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
+
+                    tasks.removeChild(insertion);
+                    deleteLine(id);
+                    marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
+                    updateDatabase(element[1], element[2], null,"2", null, databaseTypes[type]);
+                    rescuer.task -= 1; 
+
+                }
+                else {
+                    alert("The vehicle does not have sufficient items.");
+                }
+            }
+        } else {
+            alert("The vehicle is too far from the task.")
         }
     });
 }
@@ -322,6 +462,10 @@ $(document).ready(function() {
                     rescuerLayer.addLayer(rescuer);
                     rescuer.name = element[3];
                     rescuer.task = 0;
+                    rescuer.load = element[5];
+                    rescuer.quantity = element[6];
+                    console.log(element);
+                    
 
                     rescuer.bindPopup('Name: '+rescuer.name+'<br>Active Tasks: '+ rescuer.task +
                                       '<br><button class="openStorage">Open storage</button>');
@@ -374,6 +518,9 @@ $(document).ready(function() {
                     var marker = L.marker([element[5],element[6]], {icon: untaken_icons[type]});
                     marker.bindPopup(element[7]);
                     marker.id = element[2];
+                    marker.user = element[1];
+                    marker.load = element[8];
+                    marker.quantity = element[9];
 
                     if (element[3] == "0") {
                         markerCluster.addLayer(marker);

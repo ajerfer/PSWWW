@@ -16,7 +16,19 @@ if (isset($_SESSION['userId']) && $_SESSION['role'] == 'rescuer') {
     $row = $result->fetch_assoc();
     $rescuers[] = $row['name'];
     $rescuers[] = $user;
-    $rescuers = [$rescuers];
+
+    $cursor = $vehiclesC->findOne(['userId' => $user]);
+
+    // Array of ID
+    $load = [[],[]];
+
+    foreach ($cursor['load'] as $item) {
+                $load[0][] = $item['id'];
+                $load[1][] = $item['quantity']; 
+    }
+
+    $rescuers = [array_merge($rescuers,$load)];
+
 } else if (isset($_SESSION['userId']) && $_SESSION['role'] == 'admin') {
     $sql = "SELECT userId, lat, lng FROM users WHERE userId in (SELECT userId FROM rescuers)";
     $result = $con->query($sql);
@@ -67,10 +79,17 @@ foreach ($data as $item) {
         $desc .= $p." ";
     }
     $desc .= "<br>Quantities: ";
+    $quantity = [];
     foreach($item['nProducts'] as $n) {
         $desc .= $n." ";
+        $quantity[] = $n;
     }
     $desc .= "<br>";
+
+    $productsid = [];
+    foreach($item['productsId'] as $pid) {
+        $productsid[] = $pid;
+    }
     
     $rescuerId = null;
     if ($item['state'] == "1") {
@@ -82,7 +101,7 @@ foreach ($data as $item) {
         $desc .= "Date collected: " . $item['dateCompleted'] . "<br>";
     }
 
-    $markers[] = [3,$document['userId'],$item['id'],$item['state'], $rescuerId,$lat, $lng, $desc];
+    $markers[] = [3,$document['userId'],$item['id'],$item['state'], $rescuerId,$lat, $lng, $desc, $productsid, $quantity];
 }
 
 $cursor = $requestsC->find();
@@ -107,11 +126,9 @@ foreach ($data as $item) {
     $desc = "Name: " . $row['name']."<br>";
     $desc .= "Phone: " . $row['phone'] . "<br>";
     $desc .= "Date created: " . $item['dateCreated'] . "<br>";
-    $desc .= "Products: ";
-    foreach($item['products'] as $p) {
-        $desc .= $p." ";
-    }
+    $desc .= "Products: " . $item['products'];
     $desc .= "<br>People: " . $item['nPersons'] . "<br>";
+    
     $rescuerId = null;
     if ($item['state'] == "1") {
         $rescuerId = $item['rescuerId'];
@@ -122,7 +139,7 @@ foreach ($data as $item) {
         $desc .= "Date collected: " . $item['dateCompleted'] . "<br>";
     }
 
-    $markers[] = [4,$document['userId'],$item['id'],$item['state'], $rescuerId, $lat, $lng, $desc];
+    $markers[] = [4,$document['userId'],$item['id'],$item['state'], $rescuerId, $lat, $lng, $desc, $item['productsId'], $item['nPersons']];
 }
 
 $sql = "SELECT lat, lng FROM users WHERE userId = 1";
