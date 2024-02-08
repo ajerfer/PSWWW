@@ -154,3 +154,10 @@ function clearAllFilters() {
         handleCategoryFilter(checkbox.id.split('_')[1]); // Call filter handler for each checkbox
     });
 }
+
+function toggleCategories() {
+    var categories = document.getElementById('categories');
+    categories.style.display = (categories.style.display === 'none') ? 'block' : 'none';
+    var button = document.getElementById('buttonToggleCategories');
+    button.textContent = (categories.style.display === 'none') ? 'Show Categories' : 'Hide Categories';
+}

@@ -1,7 +1,5 @@
 <?php
 session_start();
-include_once '../mongodbconnect.php';
-
 
 // Verificar si el usuario ha iniciado sesión y es un administrador
 if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
@@ -9,54 +7,22 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
+include_once '../mongodbconnect.php';
+
+
 // Seleccionar la colección de productos
-$productsCollection = $dataBase->Products;
+$warehouseDoc = $productsC->findOne([]); 
 
+$items = $warehouseDoc['items'];
+$categories = $warehouseDoc['categories'];
 
-function getAllProducts() {
-    global $productsCollection;
-    return $productsCollection->find();
-}
-
-$categoryFilter = null;
-
-$categoryFilter = isset($_POST['category']) ? $_POST['category'] : [];
-
-if (empty($categoryFilter)) {
-    // Si no hay categorías seleccionadas, obtén todos los productos
-    $products = getAllProducts();
-} else {
-   // Si hay categorías seleccionadas, filtra los productos por categoría 6
-   foreach ($categoryFilter as $category) {
-        $aggregation = [
-            [
-                '$unwind' => '$items'
-            ],
-            [
-                '$match' => [
-                    'items.category' => $category
-                ]
-            ],
-            [
-                '$group' => [
-                    '_id' => '$_id',
-                    'items' => [
-                        '$push' => '$items'
-                    ]
-                ]
-            ]
-        ];
-        $results[] = $productsCollection->aggregate($aggregation)->toArray();
-    }
-
-    $products = array_merge(...$results);
-}
 
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script src="manage_store.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../../public/styles.css">
@@ -65,7 +31,6 @@ if (empty($categoryFilter)) {
         body {
             margin-top: 10px; /* Espacio para el botón fijo */
         }
-
         .backBtn {
             position: absolute;
             top: 10px;
@@ -81,6 +46,40 @@ if (empty($categoryFilter)) {
             top: 10px;
             right: 70px; /* Ajusta la posición según tu diseño */
         }
+        .filter-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .item-box {
+            border: 2px solid #ccc;
+            padding-top: 10px;
+            padding-bottom: 30px;
+            padding-left: 30px;
+            padding-right: 30px;
+            margin: 0px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            text-align: left;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
@@ -93,34 +92,51 @@ if (empty($categoryFilter)) {
     <form class="addProductBtn" action="add_product.php" method="post">
         <button type="submit">Add Product</button>
     </form>
+    
     <h1>List of Products</h1>
-    <form method="get" action="filter_categories.php">
-        <button type="submit">Filter</button>
-    </form>
-    <?php foreach ($products as $product): ?>
-        <div>
+    
+    <div class="filter-box">
+        <b>Filter by Category</b>
+        <button id="buttonToggleCategories" style="magin-left: 10px;" onclick="toggleCategories()">Show Categories</button>
+        <div id="categories" style="display: none;">
+            <div>
+                <button style="margin-left: 10px" onclick="selectAllFilters()">All</button>
+                <button onclick="clearAllFilters()">Clear</button>
+            </div>
+            <?php foreach ($categories as $category): ?>
+                <input type="checkbox" class="category-checkbox" id="cat_<?= $category['id'] ?>" checked onclick="handleCategoryFilter('<?= $category['id'] ?>')">
+                <label for="<?= $category['id'] ?>"><?= $category['category_name'] ?></label>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <?php foreach ($items as $item): ?>
+        <!-- Item Box -->
+        <div class="item-box" data-category="<?= $item['category'] ?>">
+            <h4><?= $item['name'] ?> </h4>
             <ul>
-                <?php foreach ($product['items'] as $item): ?>
-                    <li><?= $item['name']; ?> <br>
-                        <ul>
-                        <li>Quantity: <?= $item['quantity']; ?></li>
-                            <?php foreach ($item['details'] as $detail): ?>
-                                    <li><?= $detail['detail_name'] . ': ' . $detail['detail_value']; ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <br>
-                        <form action="modifyProduct.php" method="post" style="display: inline;">
-                            <input type="hidden" name="itemId" value="<?= $item['id']; ?>">
-                            <button type="submit">Modify Product</button>
-                        </form>
-                        <form action="deleteProduct.php" method="post" style="display: inline;">
-                            <input type="hidden" name="itemId" value="<?= $item['id']; ?>">
-                            <button type="submit">Delete Product</button>
-                        </form>
-                    </li>
-                    <br>
-                <?php endforeach; ?>
+                <!-- Show the item details -->
+                <li>Quantity: <?= $item['quantity']; ?></li>
+                <?php if (!empty($item['details'])): ?>
+                    <li>Details</li>
+                    <ul>
+                        <?php foreach ($item['details'] as $detail): ?>
+                            <li><?= $detail['detail_name'] . ': ' . $detail['detail_value']; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </ul>
+            <div>
+            <form action="modifyProduct.php" method="post" style="display: inline;">
+                <input type="hidden" name="itemId" value="<?= $item['id']; ?>">
+                <button type="submit">Modify Product</button>
+            </form>
+            <form action="deleteProduct.php" method="post" style="display: inline;">
+                <input type="hidden" name="itemId" value="<?= $item['id']; ?>">
+                <button type="submit">Delete Product</button>
+            </form>
+        </div>
+
         </div>
     <?php endforeach; ?>
 </body>

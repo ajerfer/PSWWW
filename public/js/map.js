@@ -265,12 +265,26 @@ function changePosition(marker, id, confirmation = false) {
 }
 
 function sendLocationBoolean (rescuer, base) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', './rescuer/manage_vehicle.php', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    var data = 'isNear=' + (distance(base.getLatLng(),rescuer.getLatLng()) <= 100)+'&userId=' + rescuer.id;
 
-    xhr.send(data);
+    var isNear = "false";
+    if (distance(base.getLatLng(),rescuer.getLatLng()) <= 100) {
+        isNear = "true";
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "./rescuer/manage_vehicle.php", // Change to the correct URL
+        data: {
+            isNear: isNear, 
+            userId: rescuer.id
+        },
+        success: function(response) {
+            console.log(response);
+        },
+        error: function(error) {
+            console.error(error);
+        }
+    });
 }
 
 function ModifyOfferRequest(main_layer, filter_layer, icon, add_delete) {
@@ -352,6 +366,8 @@ $(document).ready(function() {
                         var storageButton = document.querySelector('.openStorage');
                         if (storageButton) {
                             sendLocationBoolean(rescuer, base);
+                            $("#modalDialogOverlay").load(location.href + " #modalDialogOverlay" ); // Reload content
+                            
                             storageButton.addEventListener('click', function () {
                                 document.getElementById('dialogOverlay').style.display = 'flex';
 

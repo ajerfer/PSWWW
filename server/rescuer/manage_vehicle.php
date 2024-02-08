@@ -22,13 +22,12 @@ $content = ['vehicle' => $vehicleDoc['load'], 'warehouse' => $warehouseDoc['item
 $categories = $warehouseDoc['categories'];
 
 // Change the content depending the rescuer position (as implemented the first condition is always true)
-$isNear =  false;
+$isNear =  true;
 
 if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['isNear']) && isset($_POST['userId']) && $_POST['userId']==$userId) {
-    $_SESSION['isNear'] = $_POST['isNear'];
     $isNear = $_POST['isNear'];
-    echo "isNear = $isNear\n";
-    $isNear = true;
+    $_SESSION['isNear'] = $_POST['isNear'];
+    echo "isNear: $isNear \n";
 }
 
 // Change the section based on the POST request (if isNear)
@@ -124,15 +123,18 @@ if ($isNear && $_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['section'])) 
     <!-- Filter section -->
     <?php if ($isNear && $section == 'warehouse'): ?>
         <div class="filter-box">
-            <div>
-                <b>Filter by Category</b>
-                <button style="margin-right: 10px" onclick="selectAllFilters()">All</button>
-                <button onclick="clearAllFilters()">Clear</button>
+            <b>Filter by Category</b>
+            <button id="buttonToggleCategories" style="magin-left: 10px;" onclick="toggleCategories()">Show Categories</button>
+            <div id="categories" style="display: none;">
+                <div>
+                    <button style="margin-left: 10px" onclick="selectAllFilters()">All</button>
+                    <button onclick="clearAllFilters()">Clear</button>
+                </div>
+                <?php foreach ($categories as $category): ?>
+                    <input type="checkbox" class="category-checkbox" id="cat_<?= $category['id'] ?>" checked onclick="handleCategoryFilter('<?= $category['id'] ?>')">
+                    <label for="<?= $category['id'] ?>"><?= $category['category_name'] ?></label>
+                <?php endforeach; ?>
             </div>
-            <?php foreach ($categories as $category): ?>
-                <input type="checkbox" class="category-checkbox" id="cat_<?= $category['id'] ?>" checked onclick="handleCategoryFilter('<?= $category['id'] ?>')">
-                <label for="<?= $category['id'] ?>"><?= $category['category_name'] ?></label>
-            <?php endforeach; ?>
         </div>
     <?php endif; ?>
 
@@ -171,7 +173,6 @@ if ($isNear && $_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['section'])) 
 </div>
 
 <script>
-
 </script>
 </body>
 </html>
