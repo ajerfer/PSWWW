@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Página Web</title>
+    <title>Web Programming</title>
     <style>
 		body, h1, h2, form {
 			margin: 0;
@@ -67,7 +67,7 @@
 </head>
 <body>
     <header>
-        <h1>Bienvenido a mi Página Web</h1>
+        <h1>WELCOME</h1>
     </header>
     <div class="login-container">
 	<h2>Login<br></h2>
@@ -83,7 +83,7 @@
 	</form>
 	</div>
 	<a href="new_user.php">
-		<button>Crear Usuario</button>
+		<button>Register</button>
 	</a>
 </body>
 </html>
