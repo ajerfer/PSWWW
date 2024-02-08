@@ -19,10 +19,10 @@ $vehicleDoc = $vehiclesC->findOne(['userId' => $userId]);
 $warehouseDoc = $productsC->findOne([]);
 
 $content = ['vehicle' => $vehicleDoc['load'], 'warehouse' => $warehouseDoc['items']];
-
+$categories = $warehouseDoc['categories'];
 
 // Change the content depending the rescuer position (as implemented the first condition is always true)
-$isNear = false;
+$isNear = true;
 if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['isNear']) && isset($_POST['userId']) && $_POST['userId']==$userId) {
     $_SESSION['isNear'] = $_POST['isNear'];
     $isNear = $_POST['isNear'];
@@ -88,64 +88,87 @@ if ($isNear && $_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['section'])) 
             padding: 20px;
         }
 
+        .category-checkbox {
+            margin-right: 10px;
+        }
+
+        .filter-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
-
 <body>
 
-    <h1>My Vehicle</h1>
+<h1>My Vehicle</h1>
 
-   
-    <div id="storageContent">
+<div id="storageContent">
 
-        <!-- Section Buttons  (the style stills when the webpage is reloaded) -->
-        <button class="seccionButton" onclick="showSection('vehicle')" style="<?= ($section === 'vehicle') ? 'background-color:#333; color:white;' : '' ?>">VEHICLE STORAGE</button>
-        <?php if ($isNear): ?>
+    <!-- Section Buttons  (the style stills when the webpage is reloaded) -->
+    <button class="seccionButton" onclick="showSection('vehicle')" style="<?= ($section === 'vehicle') ? 'background-color:#333; color:white;' : '' ?>">VEHICLE STORAGE</button>
+    <?php if ($isNear): ?>
         <button class="seccionButton" onclick="showSection('warehouse')" style="<?= ($section === 'warehouse') ? 'background-color:#333; color:white;' : '' ?>">WAREHOUSE STORAGE</button>
-        <?php endif; ?>
-        
-        <div>
+    <?php endif; ?>
+
+    <div>
         <?php if ($section == 'vehicle'): ?>
             <button onclick="callUnloadVehicle(<?= $userId ?>)" style="margin-top: 10px;">Unload Vehicle</button>
         <?php endif; ?>
-        </div>
+    </div>
 
-        <?php foreach ($content[$section] as $item): ?>    
-            <!-- Item Box -->
-            <div class="item-box"> 
-                <h4><?= $item['name'] ?> </h4>
-                <ul>
-                    <!-- Show the item details -->
-                    <li>Quantity: <?= $item['quantity']; ?></li>
-                    <?php if (!empty($item['details'])): ?>
-                        <li>Details</li>
-                        <ul>
+    <!-- Filter section -->
+    <?php if ($isNear && $section == 'warehouse'): ?>
+        <div class="filter-box">
+            <div>
+                <b>Filter by Category</b>
+                <button style="margin-right: 10px" onclick="selectAllFilters()">All</button>
+                <button onclick="clearAllFilters()">Clear</button>
+            </div>
+            <?php foreach ($categories as $category): ?>
+                <input type="checkbox" class="category-checkbox" id="cat_<?= $category['id'] ?>" checked onclick="handleCategoryFilter('<?= $category['id'] ?>')">
+                <label for="<?= $category['id'] ?>"><?= $category['category_name'] ?></label>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php foreach ($content[$section] as $item): ?>
+        <!-- Item Box -->
+        <div class="item-box" data-category="<?= $item['category'] ?>">
+            <h4><?= $item['name'] ?> </h4>
+            <ul>
+                <!-- Show the item details -->
+                <li>Quantity: <?= $item['quantity']; ?></li>
+                <?php if (!empty($item['details'])): ?>
+                    <li>Details</li>
+                    <ul>
                         <?php foreach ($item['details'] as $detail): ?>
                             <li><?= $detail['detail_name'] . ': ' . $detail['detail_value']; ?></li>
                         <?php endforeach; ?>
-                        </ul>
-                    <?php endif; ?>
-                </ul>
-                <?php if ($section == 'warehouse'): ?>
-                    <button onclick=" openPopupBox('<?= $item['id'] ?>');">Load</button>
+                    </ul>
                 <?php endif; ?>
-            </div>
-            <!-- Popup Quantity Box -->
-            <div id="modal<?= $item['id'] ?>" class="modal">
-                <div class="modal-content">
-                    <h4> Quantity [1-<?= $item['quantity'] ?>] </h4>
-                    <input type="number" id="quantity_input_<?= $item['id'] ?>" class="validity" min="1" max="<?= $item['quantity'] ?>" value="1" style="margin-bottom: 20px;">
-                    <div class="btn-container">
-                        <button onclick="closePopupBox('<?= $item['id'] ?>')">Close</button>
-                        <button onclick="callLoadItem('<?= $userId ?>','<?= $item['id'] ?>', getElementById('quantity_input_<?= $item['id'] ?>').value, <?= $item['quantity'] ?>) ">Load</button>
-                    </div>
+            </ul>
+            <?php if ($section == 'warehouse'): ?>
+                <button onclick=" openPopupBox('<?= $item['id'] ?>');">Load</button>
+            <?php endif; ?>
+        </div>
+        <!-- Popup Quantity Box -->
+        <div id="modal<?= $item['id'] ?>" class="modal">
+            <div class="modal-content">
+                <h4> Quantity [1-<?= $item['quantity'] ?>] </h4>
+                <input type="number" id="quantity_input_<?= $item['id'] ?>" class="validity" min="1" max="<?= $item['quantity'] ?>" value="1" style="margin-bottom: 20px;">
+                <div class="btn-container">
+                    <button onclick="closePopupBox('<?= $item['id'] ?>')">Close</button>
+                    <button onclick="callLoadItem('<?= $userId ?>','<?= $item['id'] ?>', getElementById('quantity_input_<?= $item['id'] ?>').value, <?= $item['quantity'] ?>) ">Load</button>
                 </div>
             </div>
-        <?php endforeach; ?>
-    </div>
-    
-    <script>
-        
-    </script>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<script>
+
+</script>
 </body>
 </html>
