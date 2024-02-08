@@ -18,8 +18,8 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
     <style>
     #myChartContainer {
         margin: auto;
-        width: 90%; /* set the desired width */
-        height: 90%; /* set the desired height */
+        width: 90%;
+        height: 90%;
         position: center;
     }
     </style>
