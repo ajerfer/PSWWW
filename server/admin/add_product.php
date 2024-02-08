@@ -3,7 +3,7 @@ session_start();
 include_once '../mongodbconnect.php';
 
 if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../index.php"); // Redirigir a la página de inicio de sesión
+    header("Location: ../index.php");
     exit();
 }
 
@@ -15,7 +15,7 @@ $uniqueCategories = $productsCollection->distinct('categories', [],['id', 'categ
 
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <script src="add_delete_detail.js"></script>
     <meta charset="UTF-8">
@@ -46,6 +46,6 @@ $uniqueCategories = $productsCollection->distinct('categories', [],['id', 'categ
             <button type="submit">Save</button>
         </form>
     <br>
-    <a href="manage_store.php">Volver a la Gestión de Almacén</a>
+    <a href="manage_store.php">Back to manage store</a>
 </body>
 </html>
