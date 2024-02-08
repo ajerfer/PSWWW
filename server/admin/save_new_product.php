@@ -2,16 +2,13 @@
 session_start();
 include_once '../mongodbconnect.php';
 
-// Verificar si el usuario ha iniciado sesión y es un administrador
 if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../index.php"); // Redirigir a la página de inicio de sesión
+    header("Location: ../index.php");
     exit();
 }
 
-// Seleccionar la colección de productos
 $productsCollection = $dataBase->Products;
 
-// Obtener datos del formulario
 $newName = $_POST['itemName'];
 $newCategory = $_POST['category'];
 $newQuantity = $_POST['itemQuantity'];
@@ -27,7 +24,6 @@ $newProduct = [
 ];
 
 if (!empty($newDetails) && !empty($newValues)) {
-    // Iterar sobre los detalles y valores y agregarlos al producto
     for ($i = 0; $i < count($newDetails); $i++) {
         $detailName = $newDetails[$i];
         $detailValue = $newValues[$i];
@@ -38,25 +34,22 @@ if (!empty($newDetails) && !empty($newValues)) {
         ];
     }
 }
-// Obtener el primer documento de la colección
+
 $firstDocument = $productsCollection->findOne();
 
-// Obtener el _id del primer documento
 $firstDocumentId = $firstDocument['_id'];
 
-// Utilizar el _id en la actualización
 $filter = ['_id' => $firstDocumentId];
 $result = $productsCollection->updateOne(
     $filter,
     ['$push' => ['items' => $newProduct]]
 );
-//$result = $productsCollection->insertOne($newProduct);
 
 if ($result->getModifiedCount() > 0) {
-    echo "Producto insertado correctamente.";
+    echo "Product inserted correctly.";
 } else {
-    echo "Error al insertar el producto.";
+    echo "Error.";
 }
-echo '<br><br><a href="manage_store.php">Come back to manage the store</a>';
+echo '<br><br><a href="manage_store.php">Back to manage the store</a>';
 exit();
 ?>
