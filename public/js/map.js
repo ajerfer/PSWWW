@@ -213,8 +213,8 @@ function addToTasks(marker,element,id,type) {
         tasks.removeChild(insertion);
         deleteLine(id);
         marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
-        marker.setIcon(untaken_offer);
-        acceptButtonListener(marker,rescuer,id,element,0);
+        marker.setIcon(untaken_icons[type]);
+        acceptButtonListener(marker,rescuer,id,element,type);
         updateDatabase(element[1], element[2], null,"0", null, databaseTypes[type]);
     });
 
@@ -264,29 +264,6 @@ function changePosition(marker, id, confirmation = false) {
     });
 }
 
-function sendLocationBoolean (rescuer, base) {
-
-    var isNear = "false";
-    if (distance(base.getLatLng(),rescuer.getLatLng()) <= 100) {
-        isNear = "true";
-    }
-
-    $.ajax({
-        type: "POST",
-        url: "./rescuer/manage_vehicle.php", // Change to the correct URL
-        data: {
-            isNear: isNear, 
-            userId: rescuer.id
-        },
-        success: function(response) {
-            console.log(response);
-        },
-        error: function(error) {
-            console.error(error);
-        }
-    });
-}
-
 function ModifyOfferRequest(main_layer, filter_layer, icon, add_delete) {
     main_layer.eachLayer(function(marker) {
         if (marker.getIcon() == icon) {
@@ -304,7 +281,6 @@ function ModifyOfferRequest(main_layer, filter_layer, icon, add_delete) {
 // Reading of markers
 
 $(document).ready(function() {
-    // AJAX request to fetch data from data.php
     $.ajax({
         url: 'creating_markers.php',
         type: 'GET',
@@ -365,11 +341,11 @@ $(document).ready(function() {
                     rescuer.on('popupopen', function () {
                         var storageButton = document.querySelector('.openStorage');
                         if (storageButton) {
-                            sendLocationBoolean(rescuer, base);
-                            $("#modalDialogOverlay").load(location.href + " #modalDialogOverlay" ); // Reload content
-                            
                             storageButton.addEventListener('click', function () {
                                 document.getElementById('dialogOverlay').style.display = 'flex';
+
+                                var iframe = document.getElementById('vehicleBox');
+                                iframe.src = './rescuer/manage_vehicle.php';
 
                                 var closeButton = document.createElement('span');
                                 closeButton.innerHTML = '&times;'; // '×' character for close icon
