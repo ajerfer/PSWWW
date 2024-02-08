@@ -137,7 +137,7 @@ if ($isNear && $_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['section'])) {
     <?php endif; ?>
 
     <div>
-        <?php if ($section == 'vehicle'): ?>
+        <?php if ($isNear && $section == 'vehicle'): ?>
             <button onclick="callUnloadVehicle(<?= $userId ?>)" style="margin-top: 10px;">Unload Vehicle</button>
         <?php endif; ?>
     </div>

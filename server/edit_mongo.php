@@ -8,13 +8,14 @@ include_once "mongodbconnect.php";
  *
  * @param array $productsSelection - Array of selected products for the announcement.
  */
-function createAnnouncement($productsSelection) {
+function createAnnouncement($productsId, $products) {
     global $announcementsC;
 
     // Create a new announcement document
     $newAnnouncement = [
         "id" => uniqid(),
-        "products" => $productsSelection
+        "productsId" => $productsId,
+        "products" => $products
     ];
 
     try {
@@ -101,6 +102,7 @@ function createOffer($userId,$announcementId,$quantities) {
     
     foreach ($firstDocument['announcements'] as $announcement)
         if ($announcement['id'] == $announcementId){
+            $productsId = $announcement['productsId'];
             $products = $announcement['products'];
             break;
         }
@@ -108,8 +110,11 @@ function createOffer($userId,$announcementId,$quantities) {
     $arrayQuantities = [];  // $quantities is an object
     // Delete the empty products
     for ($i=count($products)-1; $i > -1; $i--)
-        if ($quantities[$i] == 0) 
+        if ($quantities[$i] == 0){
+            unset($productsId[$i]);
             unset($products[$i]);
+
+        }
         else
             array_unshift($arrayQuantities, $quantities[$i]);
 
@@ -122,6 +127,7 @@ function createOffer($userId,$announcementId,$quantities) {
         "dateCreated" => new MongoDB\BSON\UTCDateTime((new DateTime())->getTimestamp()*1000+ (120*60) * 1000), // Athens hour
         "dateAccepted" => null,
         "dateCompleted" => null,
+        "productsId" => $productsId,
         "products" => $products,
         "nProducts"=> $arrayQuantities
     ];
@@ -355,7 +361,6 @@ function loadItem($userId, $itemId, $newQuantity) {
     }
 }
 
-
 function unloadVehicle($userId) {
     global $productsC;
     global $vehiclesC;
@@ -399,6 +404,53 @@ function unloadVehicle($userId) {
     }
 }
 
+
+function completeRequest($userId, $requestId, $rescuerId) {
+    global $requestsC;
+    global $vehiclesC;
+    
+    try {
+        // Find doc
+        $requestDoc = $requestsC->findOne(['userId' => $userId]);
+
+        if ($requestDoc) {
+            
+            $request = "";
+            foreach ($requestDoc['requests'] as $r)
+                if ($r['id'] == $requestId) {
+                    $request = $r;
+                    break;
+                }
+
+            $vehicleDoc = $vehiclesC->findOne(['userId' => $rescuerId]);
+
+            if ($vehicleDoc) {
+
+            }
+            
+            
+            
+            // Delete the offer 
+            $updateResult = $offersC->updateOne(
+                ['_id' => $userDoc['_id']],
+                ['$pull' => ['offers' => ['id' => $offerId]]]
+            );
+            
+            // Check if the update was successful
+            if ($updateResult->getModifiedCount() > 0) {
+                echo "Offer deleted successfully.";
+            } else {
+                echo "Error deleting offer.";
+            }
+        } else {
+            echo "Error: No documents found in the requests collection.";
+        }
+    } catch (MongoDB\Driver\Exception\Exception $e) {
+        echo "Error deleting iffer: " . $e->getMessage();
+    }
+}
+
+
 //------------------------CHOOSING FUNCTION------------------------//
 
 
@@ -410,9 +462,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     switch ($action) {
         case 'createAnnouncement':
             if (isset($_POST['payload'])) {
-                $selectedProducts = $_POST['payload'];
+                $productsId = $_POST['payload']['productsId'];
+                $products = $_POST['payload']['products'];
                 
-                createAnnouncement($selectedProducts);
+                createAnnouncement($productsId, $products);
             } else {
                 echo "Error: Missing parameters for createAnnouncement.";
             }
@@ -493,6 +546,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     unloadVehicle($userId);
                 } else {
                     echo "Error: Missing parameters for unloadVehicle.";
+                }
+                break;
+
+            case 'completeRequest':
+                if (isset($_POST['payload'])) {
+                    $userId = $_POST['payload']['userId'];
+                    $requestId = $_POST['payload']['requestId'];
+                    $rescuerId = $_POST['payload']['rescuerId'];
+                    
+                    completeRequest($userId, $requestId, $rescuerId);
+                } else {
+                    echo "Error: Missing parameters for completeRequest.";
+                }
+                break;
+
+            case 'completeOffer':
+                if (isset($_POST['payload'])) {
+                    $userId = $_POST['payload']['userId'];
+                    $requestId = $_POST['payload']['requestId'];
+                    $rescuerId = $_POST['payload']['rescuerId'];
+                    
+                    completeOffer($userId, $requestId, $rescuerId);
+                } else {
+                    echo "Error: Missing parameters for completeOffer.";
                 }
                 break;
     

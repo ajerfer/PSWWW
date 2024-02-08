@@ -1,14 +1,14 @@
 <?php
 session_start();
 
-// // Verify the user 
-// if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin' || $_SESSION['role'] !== 'citizen') {
-//     header("Location: ../index.php"); // Redirigir a la página de inicio de sesión
-//     exit();
-// } 
+// Verify the user 
+if (!isset($_SESSION['userId']) || ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'citizen')) {
+    header("Location: ./index.php"); // Redirigir a la página de inicio de sesión
+    exit();
+} 
 
 // Save the userId 
-$userId = 3; // $_SESSION['userId'];
+$userId = $_SESSION['userId'];
 
 include_once "mongodbconnect.php";
 
@@ -17,17 +17,13 @@ $documentP = $productsC->findOne([]);
 $documentA = $announcementsC->findOne([]);
 
 // Array to store product names
-$productsNames = [];
+$products = [];
 
 // Iterate through products and extract names
 foreach ($documentP['items'] as $item) {
-    $productsNames[] = $item['name'];
+    $products[] = [$item['id'], $item['name']];
 }
 
-// Delete the empty strings
-$productsNames = array_filter($productsNames, function ($value) {
-    return strlen($value) > 0;
-});
 
 ?>
 
@@ -86,9 +82,9 @@ $productsNames = array_filter($productsNames, function ($value) {
     <h1>Announcements List</h1>
 
     <!-- New Announcement Button -->
-    <!-- if ($_SESSION['role'] === 'citizen'): -->
+    <?php if ($_SESSION['role'] === 'admin'): ?>
         <button onclick="openPopupBox('newAnnouncement')">Create Announcement</button>
-    <!-- endif; -->
+    <?php endif; ?>
 
     <!--  Announcement List -->
     <?php
@@ -104,13 +100,13 @@ $productsNames = array_filter($productsNames, function ($value) {
                 <?php endforeach; ?>
             </ul>
             <!-- Button - Only for citizen -->
-            <!-- if ($_SESSION['role'] === 'citizen'): -->
+            <?php if ($_SESSION['role'] === 'citizen'): ?>
                 <button onclick="openPopupBox('<?= $announcement['id'] ?>')">Make offer</button>
-            <!-- endif; -->
+            <?php endif; ?>
             <!-- Button - Only for admin -->
-            <!-- if ($_SESSION['role'] === 'admin'): -->
+            <?php if ($_SESSION['role'] === 'admin'): ?>
                 <button onclick="callDeleteAnnouncement('<?= $announcement['id'] ?>')">Delete</button>
-            <!-- endif; -->
+            <?php endif; ?>
         </div>
         <!-- Popup Offer Box -->
         <div id="modal<?= $announcement['id'] ?>" class="modal">
@@ -136,8 +132,8 @@ $productsNames = array_filter($productsNames, function ($value) {
             <div class="input-container">
                 <label for="productDropdown">Add a product: </label>
                 <select id="productDropdown">
-                    <?php foreach ($productsNames as $productName): ?>
-                        <option value="<?= $productName ?>"><?= $productName ?></option>
+                    <?php foreach ($products as $product): ?>
+                        <option value="<?= $product[0] . '|' . $product[1] ?>"><?= $product[1] ?></option>
                     <?php endforeach; ?>
                 </select>
                 <button onclick="addProduct()" style="margin-top:10px">Add Product</button>

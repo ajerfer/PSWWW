@@ -2,7 +2,9 @@
 document.write('<script src="../lib/jquery-3.7.1.js"><\/script>');
 
 // Array to store selected products
+var selectedProductsId = [];
 var selectedProducts = [];
+
 
 // Function to open a popup box
 function openPopupBox(id) {
@@ -14,6 +16,7 @@ function openPopupBox(id) {
 function closePopupBox(id) {
     // Clear the content
     if (id === "newAnnouncement" && selectedProducts.length != 0) {
+        selectedProductsId = [];
         selectedProducts = [];
         document.getElementById("selectedProductsContainer").innerHTML = "";
     }
@@ -74,11 +77,20 @@ function callCreateOffer(userId, announcementId, quantities) {
 // Function to add a product to the selected products list
 function addProduct() {
     // Get the selected value from the dropdown
-    const selectedProduct = document.getElementById('productDropdown').value;
+    var selectedValue = document.getElementById("productDropdown").value;
 
+    // Separar los dos valores usando el carácter especial (|)
+    var valuesArray = selectedValue.split('|');
+    
+    // Ahora, valuesArray contendrá los dos valores separados
+    const selectedProductId = valuesArray[0];
+    const selectedProduct = valuesArray[1];
+    console.log(selectedProductId);
+    console.log(selectedProduct);
+    
     // Check if the product is not already in the list
-    if (!selectedProducts.includes(selectedProduct)) {
-        // Add the product to the list
+    if (!selectedProductsId.includes(selectedProductId)) {
+        selectedProductsId.push(selectedProductId);
         selectedProducts.push(selectedProduct);
 
         // Update the visualization of the list in the container
@@ -123,13 +135,17 @@ function callCreateAnnouncement() {
         // console.log("No products selected.");
         alert("No products selected.");
     } else {
+
         // Perform AJAX call
         $.ajax({
             type: "POST",
             url: "edit_mongo.php", // Change to the correct URL
             data: {
                 action: "createAnnouncement", 
-                payload: selectedProducts 
+                payload: {
+                    productsId: selectedProductsId,
+                    products: selectedProducts
+                } 
             },
             success: function(response) {
                 console.log(response);
