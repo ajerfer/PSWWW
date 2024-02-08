@@ -122,6 +122,51 @@
   transform: rotate(45deg);
 }
 
+        /* Styles for the overlay/modal */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Adjust the z-index to be on top of everything */
+        }
+
+        .modal {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px; /* Adjust the width as needed */
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 1001; /* Ensure the modal is on top of the overlay */
+        }
+
+        /* Style for the close button */
+        .close {
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Style for the iframe */
+        .iframe-container {
+            height: 400px; /* Adjust the height as needed */
+            overflow: auto;
+        }
+
+        /* Style for the iframe itself */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
     </style>
     
 </head>
@@ -159,6 +204,15 @@
             <span class="checkmark"></span>
             Lines
         </label>
+</div>
+
+<div class="overlay" id="dialogOverlay">
+    <div class="modal">
+        <span class="close" onclick="closeDialog()">&times;</span>
+        <div class="iframe-container">
+            <iframe src="./rescuer/manage_vehicle.php" frameborder="0"></iframe>
+        </div>
+    </div>
 </div>
 
 </body>

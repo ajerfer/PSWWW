@@ -10,7 +10,7 @@ if (isset($_SESSION['userId']) && $_SESSION['role'] == 'rescuer') {
     $sql = "SELECT lat, lng FROM users WHERE userId = $user";
     $result = $con->query($sql);
     $row = $result->fetch_assoc();
-    $rescuers = [1,$row['lat'],$row['lng']];
+    $rescuers = [2,$row['lat'],$row['lng']];
     $sql = "SELECT name FROM rescuers WHERE userId = $user";
     $result = $con->query($sql);
     $row = $result->fetch_assoc();
@@ -23,7 +23,7 @@ if (isset($_SESSION['userId']) && $_SESSION['role'] == 'rescuer') {
     $rescuers = [];
     while ($row = $result->fetch_assoc()) {
         $user = $row['userId'];
-        $temp = [1,$row['lat'],$row['lng']];
+        $temp = [2,$row['lat'],$row['lng']];
         $sql1 = "SELECT name FROM rescuers WHERE userId = $user";
         $result1 = $con->query($sql1);
         $row1 = $result1->fetch_assoc();
@@ -82,7 +82,7 @@ foreach ($data as $item) {
         $desc .= "Date collected: " . $item['dateCompleted'] . "<br>";
     }
 
-    $markers[] = [2,$document['userId'],$item['id'],$item['state'], $rescuerId,$lat, $lng, $desc];
+    $markers[] = [3,$document['userId'],$item['id'],$item['state'], $rescuerId,$lat, $lng, $desc];
 }
 
 $cursor = $requestsC->find();
@@ -122,7 +122,7 @@ foreach ($data as $item) {
         $desc .= "Date collected: " . $item['dateCompleted'] . "<br>";
     }
 
-    $markers[] = [3,$document['userId'],$item['id'],$item['state'], $rescuerId, $lat, $lng, $desc];
+    $markers[] = [4,$document['userId'],$item['id'],$item['state'], $rescuerId, $lat, $lng, $desc];
 }
 
 $sql = "SELECT lat, lng FROM users WHERE userId = 1";
@@ -131,5 +131,5 @@ $row = $result->fetch_assoc();
 
 // Return JSON response
 header('Content-Type: application/json');
-echo json_encode(array_merge([[4,$_SESSION['userId']],[0, $row['lat'], $row['lng'], 1]],$rescuers,$markers));
+echo json_encode(array_merge([[0,$_SESSION['userId']],[1, $row['lat'], $row['lng'], 1]],$rescuers,$markers,[[5]]));
 ?>

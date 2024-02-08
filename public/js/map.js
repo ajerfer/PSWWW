@@ -159,7 +159,8 @@ function acceptButtonListener (marker,rescuer,id,element,type) {
                     marker.setIcon(taken_icons[type]);
                     drawLine(marker,rescuer,id);
                     rescuer.task += 1;
-                    rescuer.bindPopup('Name: '+rescuer.name+'<br>ActiveTasks: '+ rescuer.task);
+                    rescuer.bindPopup('Name: '+rescuer.name+'<br>Active Tasks: '+ rescuer.task +
+                                      '<br><button class="openStorage">Open storage</button>');
                     
                     updateDatabase(element[1], element[2], new Date().getTime(),"1",userid,databaseTypes[type]);
 
@@ -186,7 +187,8 @@ function acceptButtonListener (marker,rescuer,id,element,type) {
                             marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
                             updateDatabase(element[1], element[2], null,"2", null, databaseTypes[type]);
                             rescuer.task -= 1;
-                            rescuer.bindPopup('Name: '+rescuer.name+'<br>ActiveTasks: '+ rescuer.task);
+                            rescuer.bindPopup('Name: '+rescuer.name+'<br>Active Tasks: '+ rescuer.task +
+                                              '<br><button class="openStorage">Open storage</button>');
                         }
                     });
                 }
@@ -264,17 +266,9 @@ function changePosition(marker, id, confirmation = false) {
 
 function sendLocationBoolean (rescuer, base) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'manage_vehicles.php', true);
+    xhr.open('POST', './rescuer/manage_vehicle.php', true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    var data = 'isNear=' + (distance(base.getLatLng(),rescuer.getLatLng()) <= 100)+'&id=' + rescuer.id;
-    console.log
-
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Handle the response from the server if needed
-            console.log(xhr.responseText);
-        }
-    };
+    var data = 'isNear=' + (distance(base.getLatLng(),rescuer.getLatLng()) <= 100)+'&userId=' + rescuer.id;
 
     xhr.send(data);
 }
@@ -305,32 +299,30 @@ $(document).ready(function() {
             data.forEach(function(element) {
 
                 var dragbool = true;
-
+                
                 if (element[0] == 0) {
+                    userid = element[1];
+                    if (element[1] != 1) {
+                        tasks = L.control({position: 'topright'});
+                        tasks.onAdd = function (map) {
+                            var div = L.DomUtil.create('div', 'tasks');
+                            div.innerHTML = '<strong>Taken offers and requests</strong>';
+                        return div;
+                        };
+                    tasks.addTo(map);
+                    }
+                }
+                else if (element[0] == 1) {
 
                     if (userid != element[3])
                         dragbool = false;
 
                     base = L.marker([element[1],element[2]], {icon: base, draggable: dragbool});
                     map.addLayer(base);
-                    
-                    if (userid != element[3]) {
-                        base.bindPopup('<button class="manageLoad">Manage load</button>');
-                        base.on('popupopen', function () {
-                            var manageLoad = document.querySelector('.manageLoad');        
-                            manageLoad.addEventListener('click', function () {
-                                if (distance(base.getLatLng(),rescuer.getLatLng()) <= 100) {
-                                    window.location.href = 'manage_vehicle.php';
-                                } else{
-                                    alert("You need to be at least at 100 meters of the base.");
-                                }
-                            });
-                        });
-                    }
 
                     changePosition(base,element[3], true);
 
-                } else if (element[0] == 1) {
+                } else if (element[0] == 2) {
 
                     if (userid != element[4])
                         dragbool = false;
@@ -341,9 +333,9 @@ $(document).ready(function() {
                     rescuer.name = element[3];
                     rescuer.task = 0;
 
-                    //sendLocationBoolean(rescuer, base);
-
-                    rescuer.bindPopup('Name: '+rescuer.name+'<br>ActiveTasks: '+ rescuer.task);
+                    rescuer.bindPopup('Name: '+rescuer.name+'<br>Active Tasks: '+ rescuer.task +
+                                      '<br><button class="openStorage">Open storage</button>');
+                                      
                     rescuer.on('drag', function(event){
                         lines.clearLayers();
                         polylines.forEach(function(item,index) {
@@ -353,28 +345,30 @@ $(document).ready(function() {
                             lines.addLayer(item.line);
                         });
                     });
-                    
-                    rescuerLayer.eachLayer(function(marker) {
-                        if (marker.task > 0) {
-                            layer_active_cars.addLayer(marker);
-                        }
-                    });
-                    map.addLayer(layer_active_cars);
-                    
-                    rescuerLayer.eachLayer(function(marker) {
-                        if (marker.task == 0) {
-                            layer_not_active_cars.addLayer(marker);
-                        }
-                    });
-                    map.addLayer(layer_not_active_cars);
 
                     changePosition(rescuer,element[4]);
-                    //sendLocationBoolean(rescuer, base);
 
-                } else if (element[0] == 2 || element[0] == 3) {
+                    rescuer.on('popupopen', function () {
+                        var storageButton = document.querySelector('.openStorage');
+                        if (storageButton) {
+                            sendLocationBoolean(rescuer, base);
+                            storageButton.addEventListener('click', function () {
+                                document.getElementById('dialogOverlay').style.display = 'flex';
+
+                                var exitButton = document.querySelector('.openStorage');
+                                if (exitButton) {
+                                    exitButton.addEventListener('click', function() {
+                                        document.getElementById('dialogOverlay').style.display = 'none';
+                                    });
+                                }
+                            });
+                        }
+                    });
+
+                } else if (element[0] == 3 || element[0] == 4) {
                     
                     var type = 0;
-                    if (element[0] == 3) {
+                    if (element[0] == 4) {
                         type = 1;
                     }
 
@@ -400,27 +394,37 @@ $(document).ready(function() {
                             if (car.id == element[4]) {
                                 drawLine(marker,car,id);
                                 car.task += 1;
-                                car.bindPopup('Name: '+car.name+'<br>ActiveTasks: '+ car.task);
+                                rescuer.bindPopup('Name: '+rescuer.name+'<br>Active Tasks: '+ rescuer.task +
+                                                  '<br><button class="openStorage">Open storage</button>');
                                 markerCluster.addLayer(marker);
-                                ModifyOfferRequest(markerCluster,layer_offer_request,taken_request,true);
-                                ModifyOfferRequest(markerCluster,layer_offer_request,taken_offer,true);
                                 if (userid != 1) {
                                     addToTasks(marker,element,id,type);
                                 }
                             }
                         });
                     }
-                } else {
-                    userid = element[1];
-                    if (element[1] != 1) {
-                        tasks = L.control({position: 'topright'});
-                        tasks.onAdd = function (map) {
-                            var div = L.DomUtil.create('div', 'tasks');
-                            div.innerHTML = '<strong>Taken offers and requests</strong>';
-                            return div;
-                        };
-                        tasks.addTo(map);
-                    }
+                } else if (element[0] == 5) {
+                    ModifyOfferRequest(markerCluster,layer_offer_request,taken_request,true);
+                    ModifyOfferRequest(markerCluster,layer_offer_request,taken_offer,true);
+                    ModifyOfferRequest(markerCluster,layer_offer_request,untaken_request,true);
+                    ModifyOfferRequest(markerCluster,layer_offer_request,untaken_offer,true);
+                    
+                    rescuerLayer.eachLayer(function(marker) {
+                        if (marker.task > 0) {
+                            layer_active_cars.addLayer(marker);
+                        }
+                    });
+                    map.addLayer(layer_active_cars);
+                    
+                    rescuerLayer.eachLayer(function(marker) {
+                        if (marker.task == 0) {
+                            layer_not_active_cars.addLayer(marker);
+                        }
+                    });
+                    map.addLayer(layer_not_active_cars);
+
+                    layer_lines.addLayer(lines);
+                    map.addLayer(layer_lines);
                 }
             });
         },
@@ -432,9 +436,6 @@ $(document).ready(function() {
 });
 
 // Filter
-
-layer_lines.addLayer(lines);
-map.addLayer(layer_lines);
 
 document.addEventListener('DOMContentLoaded', function() {
 
