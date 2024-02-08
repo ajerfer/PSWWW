@@ -11,6 +11,7 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'rescuer') {
 
 // Include MongoDB connection file
 include_once "../mongodbconnect.php";
+include_once "../databaseconnect.php";
 
 // Save the userId and its associated document
 $userId =  $_SESSION['userId'];
@@ -22,18 +23,39 @@ $content = ['vehicle' => $vehicleDoc['load'], 'warehouse' => $warehouseDoc['item
 $categories = $warehouseDoc['categories'];
 
 // Change the content depending the rescuer position (as implemented the first condition is always true)
-$isNear =  false;
+$con = connect();
 
-if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['isNear']) && isset($_POST['userId']) && $_POST['userId']==$userId) {
-    $_SESSION['isNear'] = $_POST['isNear'];
-    $isNear = $_POST['isNear'];
-    echo "isNear = $isNear\n";
-    $isNear = true;
-}
+$sql = "SELECT lat,lng FROM users WHERE userId = 1";
+$result = $con->query($sql);
+$row = $result->fetch_assoc();
+$lat1 = deg2rad($row['lat']);
+$lon1 = deg2rad($row['lng']);
+
+$sql = "SELECT lat,lng FROM users WHERE userId = $userId";
+$result = $con->query($sql);
+$row = $result->fetch_assoc();
+$lat2 = deg2rad($row['lat']);
+$lon2 = deg2rad($row['lng']);
+
+$earthRadius = 6371000;
+
+// Calculate differences
+$latDiff = $lat2 - $lat1;
+$lonDiff = $lon2 - $lon1;
+
+// Haversine formula
+$a = sin($latDiff / 2) * sin($latDiff / 2) +
+        cos($lat1) * cos($lat2) *
+        sin($lonDiff / 2) * sin($lonDiff / 2);
+$c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+// Distance in meters
+$distance = $earthRadius * $c;
+$isNear = ($distance <= 100 ? true : false);
 
 // Change the section based on the POST request (if isNear)
 $section = isset($_SESSION['section']) ? $_SESSION['section'] : 'vehicle';
-if ($isNear && $_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['section'])) {
+if ($isNear && $_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['section'])) {
     file_put_contents("../error.txt","Primer if \n", FILE_APPEND);
     $section = $_POST['section'];
     $_SESSION['section'] = $_POST['section'];

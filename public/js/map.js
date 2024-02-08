@@ -264,15 +264,6 @@ function changePosition(marker, id, confirmation = false) {
     });
 }
 
-function sendLocationBoolean (rescuer, base) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', './rescuer/manage_vehicle.php', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    var data = 'isNear=' + (distance(base.getLatLng(),rescuer.getLatLng()) <= 100)+'&userId=' + rescuer.id;
-
-    xhr.send(data);
-}
-
 function ModifyOfferRequest(main_layer, filter_layer, icon, add_delete) {
     main_layer.eachLayer(function(marker) {
         if (marker.getIcon() == icon) {
@@ -290,7 +281,6 @@ function ModifyOfferRequest(main_layer, filter_layer, icon, add_delete) {
 // Reading of markers
 
 $(document).ready(function() {
-    // AJAX request to fetch data from data.php
     $.ajax({
         url: 'creating_markers.php',
         type: 'GET',
@@ -351,9 +341,11 @@ $(document).ready(function() {
                     rescuer.on('popupopen', function () {
                         var storageButton = document.querySelector('.openStorage');
                         if (storageButton) {
-                            sendLocationBoolean(rescuer, base);
                             storageButton.addEventListener('click', function () {
                                 document.getElementById('dialogOverlay').style.display = 'flex';
+
+                                var iframe = document.getElementById('vehicleBox');
+                                iframe.src = './rescuer/manage_vehicle.php';
 
                                 var closeButton = document.createElement('span');
                                 closeButton.innerHTML = '&times;'; // '×' character for close icon
