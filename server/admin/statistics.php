@@ -15,20 +15,28 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
     <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
     <script src="statistic.js"></script>
     <title>Statistics</title>
+    <style>
+    #myChartContainer {
+        margin: auto;
+        width: 90%; /* set the desired width */
+        height: 90%; /* set the desired height */
+        position: center;
+    }
+    </style>
 </head>
 <body>
-    <canvas id="myChart"></canvas>
-    
-    <div id="controls">
-        <label for="startDate">Start Date:</label>
-        <input type="month" id="startDate" name="startDate" value="2022-01">
+    <div id="myChartContainer">
+        <canvas id="myChart"></canvas>
         
-        <label for="endDate">End Date:</label>
-        <input type="month" id="endDate" name="endDate" value="2022-12" >
-        
-        <button id="updateChart">Update Chart</button>
+        <div id="controls">
+            <label for="startDate">Start Date:</label>
+            <input type="month" id="startDate" name="startDate" value="2022-01">
+            
+            <label for="endDate">End Date:</label>
+            <input type="month" id="endDate" name="endDate" value="2022-12" >
+            
+            <button id="updateChart">Update Chart</button>
+        </div>
     </div>
-
-    
 </body>
 </html>

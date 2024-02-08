@@ -55,72 +55,73 @@
             margin-right: 5px;
             vertical-align: middle;
         }
+
         .filter-container {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background-color: white;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: row; /* Align horizontally */
-}
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: row; /* Align horizontally */
+        }
 
-.checkbox-label {
-  position: relative;
-  display: block;
-  padding-left: 30px;
-  margin-right: 10px; /* Adjust spacing between checkboxes */
-  cursor: pointer;
-  user-select: none;
-}
+        .checkbox-label {
+            position: relative;
+            display: block;
+            padding-left: 30px;
+            margin-right: 10px; /* Adjust spacing between checkboxes */
+            cursor: pointer;
+            user-select: none;
+        }
 
-.filter-checkbox {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-}
+        .filter-checkbox {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
 
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 20px;
-  width: 20px;
-  background-color: #eee;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #eee;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
 
-.checkbox-label:hover .checkmark {
-  background-color: #ddd;
-}
+        .checkbox-label:hover .checkmark {
+            background-color: #ddd;
+        }
 
-.filter-checkbox:checked + .checkmark {
-  background-color: #4CAF50;
-  border: 1px solid #45a049;
-}
+        .filter-checkbox:checked + .checkmark {
+            background-color: #4CAF50;
+            border: 1px solid #45a049;
+        }
 
-.checkmark:after {
-  content: '';
-  position: absolute;
-  display: none;
-}
+        .checkmark:after {
+            content: '';
+            position: absolute;
+            display: none;
+        }
 
-.filter-checkbox:checked + .checkmark:after {
-  display: block;
-}
+        .filter-checkbox:checked + .checkmark:after {
+            display: block;
+        }
 
-.checkmark:after {
-  left: 7px;
-  top: 4px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
+        .checkmark:after {
+            left: 7px;
+            top: 4px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
 
         /* Styles for the overlay/modal */
         body.overlay-open {
