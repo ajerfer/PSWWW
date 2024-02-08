@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Rescatador</title>
+    <title>Rescuer register</title>
     <link rel="stylesheet" type="text/css" href="../public/styles.css">
     <style>
         form {
@@ -29,7 +29,7 @@
 </head>
 <body>
 
-    <h2>Registro de Rescuer</h2>
+    <h2>Rescuer register</h2>
 
     <form action="register_rescuer.php" method="post">
         <label for="username">Username:</label>
