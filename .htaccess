@@ -1,4 +1,4 @@
-<FilesMatch "(config\.php|\.htaccess|\.htpasswd)">
+<FilesMatch "(\.htaccess)">
     Require all denied
 </FilesMatch>
 
