@@ -7,6 +7,7 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
 }
 
 include_once '../mongodbconnect.php';
+include_once '../header.php';
 
 $warehouseDoc = $productsC->findOne([]); 
 
@@ -25,19 +26,6 @@ $categories = $warehouseDoc['categories'];
     <link rel="stylesheet" type="text/css" href="../../public/styles.css">
     <title>Products</title>
     <style>
-        body {
-            margin-top: 10px; /* Espacio para el botón fijo */
-        }
-        .backBtn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-        .logout-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
         .addProductBtn {
             position: absolute;
             top: 10px;
@@ -80,17 +68,11 @@ $categories = $warehouseDoc['categories'];
     </style>
 </head>
 <body>
-    <form id="backBtn" action="admin_page.php" method="post">
-        <button type="submit">Back</button>
-    </form>
-    <form class="logout-btn" action="../logout.php" method="post">
-        <input type="submit" value="Logout">
-    </form>
+    <h1>List of Products</h1>
+
     <form class="addProductBtn" action="add_product.php" method="post">
         <button type="submit">Add Product</button>
     </form>
-    
-    <h1>List of Products</h1>
     
     <div class="filter-box">
         <b>Filter by Category</b>

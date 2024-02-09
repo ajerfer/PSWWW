@@ -11,13 +11,13 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'admin') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin page</title>
+    <title>Admin Menu</title>
     <link rel="stylesheet" type="text/css" href="../../public/styles.css">
 </head>
 <body>
     
     <header>
-        <h1>Welcome to the admin page</h1>
+        <h1>Admin Menu</h1>
         <form id="logoutBtn" action="../logout.php" method="post">
             <input type="submit" value="Logout">
         </form>
