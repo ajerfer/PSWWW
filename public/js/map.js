@@ -486,7 +486,7 @@ $(document).ready(function() {
                                     document.getElementById('dialogOverlay').style.display = 'flex';
     
                                     var iframe = document.getElementById('vehicleBox');
-                                    iframe.src = '/server/rescuer/vehicles.php';
+                                    iframe.src = './admin/vehicles.php';
     
                                     var closeButton = document.createElement('span');
                                     closeButton.innerHTML = '&times;';
