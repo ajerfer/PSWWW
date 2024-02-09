@@ -226,7 +226,7 @@ function acceptButtonListener (marker,rescuer,id,element,type) {
                                 deleteLine(id);
                                 marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
                                 updateDatabase(element[1], element[2],"2", rescuer.id, databaseTypes[type]);
-                                rescuer.task -= 1; 
+                                rescuer.task -= 1;
 
                             } else if (databaseTypes[type] == "request") {
 
@@ -312,6 +312,7 @@ function addToTasks(marker,element,id,type) {
         acceptButtonListener(marker,rescuer,id,element,type);
         updateDatabase(element[1], element[2], "0", null, databaseTypes[type]);
         rescuer.task -= 1;
+        location.reload();
     });
 
     var completeButton = insertion.querySelector('.complete');
@@ -476,6 +477,34 @@ $(document).ready(function() {
                     base = L.marker([element[1],element[2]], {icon: base, draggable: dragbool});
                     map.addLayer(base);
 
+                    if (userid == element[3]) {
+                        base.bindPopup('<button class="openVehicleStorage">Open vehicles storage</button>');
+                        base.on('popupopen', function () {
+                            var storageVehicleButton = document.querySelector('.openVehicleStorage');
+                            if (storageVehicleButton) {
+                                storageVehicleButton.addEventListener('click', function () {
+                                    document.getElementById('dialogOverlay').style.display = 'flex';
+    
+                                    var iframe = document.getElementById('vehicleBox');
+                                    iframe.src = '/server/rescuer/vehicles.php';
+    
+                                    var closeButton = document.createElement('span');
+                                    closeButton.innerHTML = '&times;';
+                                    closeButton.className = 'close';
+                                    closeButton.onclick = closeWindow;
+    
+                                    document.getElementById('dialogOverlay').querySelector('.modal').appendChild(closeButton);
+    
+                                    function closeWindow() {
+                                        var dialogOverlay = document.getElementById('dialogOverlay');
+                                        dialogOverlay.style.display = 'none';
+                                    }
+                                            
+                                });
+                            }
+                        });
+                    }
+
                     changePosition(base,element[3], true);
 
                 } else if (element[0] == 2) {
@@ -491,9 +520,12 @@ $(document).ready(function() {
                     rescuer.load = element[5];
                     rescuer.quantity = element[6];
                     
-
-                    rescuer.bindPopup('Name: '+rescuer.name+'<br>Active Tasks: '+ rescuer.task +
-                                      '<br><button class="openStorage">Open storage</button>');
+                    if (userid == element[4]) {
+                        rescuer.bindPopup('Name: '+rescuer.name+'<br>Active Tasks: '+ rescuer.task +
+                                        '<br><button class="openStorage">Open storage</button>');
+                    } else {
+                        rescuer.bindPopup('Name: '+rescuer.name+'<br>Active Tasks: '+ rescuer.task);
+                    }
                                       
                     rescuer.on('drag', function(event){
                         lines.clearLayers();

@@ -24,7 +24,7 @@ if ($_SESSION['role'] == 'admin') {
     <style>
         #map {
             width: 100%;
-            height: 90vh;
+            height: 88vh;
         }
 
         .legend {
