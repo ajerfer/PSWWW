@@ -205,9 +205,9 @@ function acceptButtonListener (marker,rescuer,id,element,type) {
 
                                 $.ajax({
                                     type: "POST",
-                                    url: "../edit_mongo.php",
+                                    url: "./edit_mongo.php",
                                     data: {
-                                        action: "CompleteOffer", 
+                                        action: "completeOffer", 
                                         payload: {
                                             userId: marker.user,
                                             rescuerId: rescuer.id,
@@ -236,9 +236,9 @@ function acceptButtonListener (marker,rescuer,id,element,type) {
 
                                     $.ajax({
                                         type: "POST",
-                                        url: "../edit_mongo.php",
+                                        url: "./edit_mongo.php",
                                         data: {
-                                            action: "CompleteRequest", 
+                                            action: "completeRequest", 
                                             payload: {
                                                 userId: marker.user,
                                                 rescuerId: rescuer.id,
@@ -264,6 +264,8 @@ function acceptButtonListener (marker,rescuer,id,element,type) {
                                     alert("The vehicle does not have sufficient items.");
                                 }
                             }
+
+                            location.reload();
                         } else {
                             alert("The vehicle is too far from the task.")
                         }
@@ -332,9 +334,9 @@ function addToTasks(marker,element,id,type) {
 
                 $.ajax({
                     type: "POST",
-                    url: "../edit_mongo.php",
+                    url: "./edit_mongo.php",
                     data: {
-                        action: "CompleteOffer", 
+                        action: "completeOffer", 
                         payload: {
                             userId: marker.user,
                             rescuerId: rescuer.id,
@@ -363,9 +365,9 @@ function addToTasks(marker,element,id,type) {
 
                     $.ajax({
                         type: "POST",
-                        url: "../edit_mongo.php",
+                        url: "./edit_mongo.php",
                         data: {
-                            action: "CompleteRequest", 
+                            action: "completeRequest", 
                             payload: {
                                 userId: marker.user,
                                 rescuerId: rescuer.id,
@@ -390,6 +392,8 @@ function addToTasks(marker,element,id,type) {
                 else {
                     alert("The vehicle does not have sufficient items.");
                 }
+
+                location.reload();
             }
         } else {
             alert("The vehicle is too far from the task.")

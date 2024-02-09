@@ -415,7 +415,7 @@ function completeRequest($userId, $requestId, $rescuerId) {
         $vehicleDoc = $vehiclesC->findOne(['userId' => $rescuerId]);
         $requestDoc = $requestsC->findOne(['userId' => $userId]);
 
-        if ($vehicleDoc & $requestDoc) {
+        if ($vehicleDoc && $requestDoc) {
 
             $request = "";
             foreach ($requestDoc['requests'] as $r)
@@ -432,21 +432,7 @@ function completeRequest($userId, $requestId, $rescuerId) {
             // Check if the update was successful
             if ($updateResult->getModifiedCount() <= 0) {
                 echo "Error changing vehicle load.";
-            } else {
-                // Complete request
-                $updateResult = $requestsC->updateOne(
-                    ['_id' => $requestDoc['_id'], 'load.id' => $request['productId']],
-                    ['$set' => [
-                        'state' => "2",
-                        'dateCompleted' => new MongoDB\BSON\UTCDateTime((new DateTime())->getTimestamp()*1000+ (120*60) * 1000), // Athens hour
-                        'rescuerId' => $rescuerId
-                    ]]
-                );
-
-                if ($updateResult->getModifiedCount() <= 0) {
-                    echo "Error changing request.";
-                }
-            }
+            } 
         } else {
             echo "Error: No documents found.";
         }
@@ -464,7 +450,7 @@ function completeOffer($userId, $offerId, $rescuerId) {
         $vehicleDoc = $vehiclesC->findOne(['userId' => $rescuerId]);
         $offerDoc = $offersC->findOne(['userId' => $userId]);
 
-        if ($vehicleDoc & $offerDoc) {
+        if ($vehicleDoc && $offerDoc) {
 
             $offer = "";
             foreach ($offerDoc['offers'] as $o)
@@ -485,22 +471,9 @@ function completeOffer($userId, $offerId, $rescuerId) {
                 }
             }
             
-            
             // Check if the update was successful
-            if ($updatesOk) {
-                // Complete offer
-                $updateResult = $offersC->updateOne(
-                    ['_id' => $offerDoc['_id'], 'load.id' => $offer['productId']],
-                    ['$set' => [
-                        'state' => "2",
-                        'dateCompleted' => new MongoDB\BSON\UTCDateTime((new DateTime())->getTimestamp()*1000+ (120*60) * 1000), // Athens hour
-                        'rescuerId' => $rescuerId
-                    ]]
-                );
-
-                if ($updateResult->getModifiedCount() <= 0) {
-                    echo "Error changing offer.";
-                }
+            if (!$updatesOk) {
+                echo "Error changing quantity.";
             }
         } else {
             echo "Error: No documents found.";
