@@ -9,6 +9,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"]; // Hash de la contraseña
     $name = $_POST["name"];
     $surname = $_POST["surname"];
+    $lat = $_POST["lat"];
+    $lng = $_POST["lng"];
 
     $con = connect();
 
@@ -18,8 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Insertar datos en la base de datos
-    $queryUser = "INSERT INTO Users (username, password, role) 
-              VALUES ('$username', '$password', 'rescuer')";
+    $queryUser = "INSERT INTO Users (username, password, role, lat, lng) 
+              VALUES ('$username', '$password', 'rescuer',$lat,$lng)";
     mysqli_query($con, $queryUser);
 
     // Obtener el ID del usuario recién insertado
