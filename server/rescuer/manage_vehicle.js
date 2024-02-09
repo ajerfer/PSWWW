@@ -60,7 +60,7 @@ function callLoadItem (userId, itemId, newQuantity, max) {
         // Perform AJAX call
         $.ajax({
             type: "POST",
-            url: "../edit_mongo.php", // Change to the correct URL
+            url: "../edit_mongo.php",
             data: {
                 action: "loadItem", 
                 payload: {
@@ -97,7 +97,7 @@ function callUnloadVehicle (userId) {
         // Perform AJAX call
         $.ajax({
             type: "POST",
-            url: "../edit_mongo.php", // Change to the correct URL
+            url: "../edit_mongo.php",
             data: {
                 action: "unloadVehicle", 
                 payload: {

@@ -39,17 +39,13 @@ $lon2 = deg2rad($row['lng']);
 
 $earthRadius = 6371000;
 
-// Calculate differences
 $latDiff = $lat2 - $lat1;
 $lonDiff = $lon2 - $lon1;
 
-// Haversine formula
 $a = sin($latDiff / 2) * sin($latDiff / 2) +
         cos($lat1) * cos($lat2) *
         sin($lonDiff / 2) * sin($lonDiff / 2);
 $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-
-// Distance in meters
 $distance = $earthRadius * $c;
 $isNear = ($distance <= 100 ? true : false);
 
