@@ -11,6 +11,7 @@ session_start();
 
 // Include MongoDB connection file
 include_once "../mongodbconnect.php";
+include_once "../header.php";
 
 // Save the userId and its associated document
 $userId = "3"; // $_SESSION['userId'];

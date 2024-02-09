@@ -6,6 +6,7 @@ if (!isset($_SESSION['userId']) || ($_SESSION['role'] !== 'admin' && $_SESSION['
     header("Location: ./index.php"); // Redirigir a la página de inicio de sesión
     exit();
 } 
+include_once "./header.php";
 
 // Save the userId 
 $userId = $_SESSION['userId'];

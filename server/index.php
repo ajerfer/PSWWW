@@ -83,7 +83,7 @@
 	</form>
 	</div>
 	<a href="new_user.php">
-		<button>Register</button>
+		<button>Register new citizen</button>
 	</a>
 </body>
 </html>

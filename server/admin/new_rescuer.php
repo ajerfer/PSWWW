@@ -1,3 +1,8 @@
+<?php
+session_start();
+include_once "../header.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,11 +23,6 @@
             color: #fff;
             text-align: center;
             padding: 20px;
-        }
-
-        h2 {
-            display: flex;
-            margin: auto;
         }
 
         form {

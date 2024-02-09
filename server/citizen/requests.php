@@ -11,6 +11,7 @@ session_start();
 
 // Include MongoDB connection file
 include_once "../mongodbconnect.php";
+include_once "../header.php";
 
 // Fetch documents from the collection
 $documentP = $productsC->findOne([]);

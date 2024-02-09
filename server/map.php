@@ -1,3 +1,16 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['userId']) || $_SESSION['role'] == 'citizen') {
+    header("Location: ../index.php"); 
+    exit();
+}
+
+if ($_SESSION['role'] == 'admin') {
+    include_once("./header.php");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -176,7 +189,9 @@
     
 </head>
 <body>
-
+    <?php if ($_SESSION['role'] !== 'admin'):?>
+    <button onclick="window.location.href='logout.php'" style="margin-right: 10px;">Log Out</button>
+    <?php endif; ?>
     <div id="map"></div>
     <div class="filter-container">
         <label class="checkbox-label">
