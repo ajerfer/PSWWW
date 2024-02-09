@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $conn->close();
 } else {
-    // Redirigir si se accede directamente a este script sin enviar datos por POST
+    // Move the user if they access without doing POST
     header("Location: new_user.php");
     exit();
 }

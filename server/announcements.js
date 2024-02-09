@@ -53,7 +53,7 @@ function callCreateOffer(userId, announcementId, quantities) {
         // Perform AJAX call
         $.ajax({
             type: "POST",
-            url: "edit_mongo.php", // Change to the correct URL
+            url: "edit_mongo.php",
             data: {
                 action: "createOffer", 
                 payload: {
@@ -133,7 +133,7 @@ function callCreateAnnouncement() {
         // Perform AJAX call
         $.ajax({
             type: "POST",
-            url: "edit_mongo.php", // Change to the correct URL
+            url: "edit_mongo.php",
             data: {
                 action: "createAnnouncement", 
                 payload: {
@@ -164,7 +164,7 @@ function callDeleteAnnouncement(announcementId) {
         // Perform AJAX call
         $.ajax({
             type: "POST",
-            url: "edit_mongo.php", // Change to the correct URL
+            url: "edit_mongo.php",
             data: {
                 action: "deleteAnnouncement", 
                 payload: announcementId 

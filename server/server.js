@@ -3,24 +3,23 @@ const fs = require('fs');
 const path = require('path');
 
 const server = http.createServer((req, res) => {
-    // Manejo de rutas
     const filePath = req.url === '/' ? '/index.php' : req.url;
     const fullPath = path.join(__dirname, '../public', filePath);
 
-    // Leer el archivo correspondiente
+    // Read the appropiate file
     fs.readFile(fullPath, (err, content) => {
         if (err) {
             if (err.code === 'ENOENT') {
-                // Página no encontrada
+                // Page not found
                 res.writeHead(404, { 'Content-Type': 'text/html' });
                 res.end('<h1>404 Not Found</h1>');
             } else {
-                // Error del servidor
+                // Server error
                 res.writeHead(500, { 'Content-Type': 'text/html' });
                 res.end('<h1>500 Internal Server Error</h1>');
             }
         } else {
-            // Éxito, enviar el contenido del archivo
+            // Success
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(content);
         }

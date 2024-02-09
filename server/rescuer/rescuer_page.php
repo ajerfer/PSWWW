@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-// Verificar si el usuario ha iniciado sesión y es un administrador
+// Verify the role and log in of the user
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'citizen') {
-    header("Location: ../index.php"); // Redirigir a la página de inicio de sesión
+    header("Location: ../index.php");
     exit();
 }
 ?>
@@ -22,26 +22,24 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'citizen') {
 
         .container {
             position: relative;
-            padding-top: 50px; /* Ajusta según sea necesario */
+            padding-top: 50px; 
         }
 
         .logout-btn {
             position: absolute;
-            top: 10px; /* Ajusta según sea necesario */
-            right: 10px; /* Ajusta según sea necesario */
+            top: 10px; 
+            right: 10px; 
         }
     </style>
 </head>
 <body>
 <div class="container">
-        <!-- Botón de Logout -->
         <form class="logout-btn" action="../logout.php" method="post">
             <input type="submit" value="Logout">
         </form>
 
         <h1>Bienvenido a la Página de Ciudadano</h1>
 
-        <!-- Contenido adicional de la página de administrador -->
         <p>Este es el contenido de la página de ciudadano</p>
     </div>
 </body>

@@ -4,9 +4,9 @@ session_start();
 include_once "../databaseconnect.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Recuperar datos del formulario
+    // Take data from form
     $username = $_POST["username"];
-    $password = $_POST["password"]; // Hash de la contraseña
+    $password = $_POST["password"];
     $name = $_POST["name"];
     $surname = $_POST["surname"];
     $lat = $_POST["lat"];
@@ -14,36 +14,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $con = connect();
 
-    // Verificar la conexión
+    // Verify the conncetion
     if ($con->connect_error) {
         die("Fatal connection: " . $con->connect_error);
     }
 
-    // Insertar datos en la base de datos
+    // Insert data into the database
     $queryUser = "INSERT INTO Users (username, password, role, lat, lng) 
               VALUES ('$username', '$password', 'rescuer',$lat,$lng)";
     mysqli_query($con, $queryUser);
 
-    // Obtener el ID del usuario recién insertado
+    // Obtain the userId
     $userId = mysqli_insert_id($con);
 
-    // Insertar datos en la tabla Citizen
+    // Insert data in the table "citizen"
     $queryRescuer = "INSERT INTO Rescuers (userId, name, surname)
                  VALUES ('$userId', '$name', '$surname')";
     mysqli_query($con, $queryRescuer);
 
-    // Verificar si la inserción fue exitosa
+    // Verify the insertion
     if(mysqli_affected_rows($con) > 0) {
-        // Redirigir al usuario de vuelta a la página de inicio de sesión
         header("Location: admin_page.php");
         exit();
     } else {
-        echo "Error en la inserción: " . mysqli_error($con);
+        echo "Insertion error:" . mysqli_error($con);
     }
-    // Cerrar la conexión a la base de datos
+    // Close the connection
     $conn->close();
 } else {
-    // Redirigir si se accede directamente a este script sin enviar datos por POST
     header("Location: new_rescuer.php");
     exit();
 }

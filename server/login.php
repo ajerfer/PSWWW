@@ -35,9 +35,9 @@ if ($result) {
         echo "Incorrect credentials. Try again.";
     }
 } else {
-    echo "Error al realizar la consulta.";
+    echo "Error.";
 }
 
-// Cerrar conexión
+// Close connection
 mysqli_close($con);
 ?>

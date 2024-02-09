@@ -87,14 +87,11 @@ function clearMap() {
 
 function distance(coords1, coords2) {
 
-    // Radius of the Earth in meters
     var R = 6371000;
 
-    // Convert degrees to radians
     var dLat = (coords2.lat - coords1.lat) * Math.PI / 180;
     var dLon = (coords2.lng - coords1.lng) * Math.PI / 180;
 
-    // Calculate Haversine distance
     var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
             Math.cos(coords1.lat * Math.PI / 180) * Math.cos(coords2.lat * Math.PI / 180) *
             Math.sin(dLon / 2) * Math.sin(dLon / 2);
@@ -114,7 +111,6 @@ function updateDatabase (userId, id, state, rescuerId,type) {
         type: type
     };
 
-    // Make an Ajax request to the PHP script
     $.ajax({
         type: 'POST',
         url: 'update_markers.php',
@@ -209,7 +205,7 @@ function acceptButtonListener (marker,rescuer,id,element,type) {
 
                                 $.ajax({
                                     type: "POST",
-                                    url: "../edit_mongo.php", // Change to the correct URL
+                                    url: "../edit_mongo.php",
                                     data: {
                                         action: "CompleteOffer", 
                                         payload: {
@@ -335,7 +331,7 @@ function addToTasks(marker,element,id,type) {
 
                 $.ajax({
                     type: "POST",
-                    url: "../edit_mongo.php", // Change to the correct URL
+                    url: "../edit_mongo.php",
                     data: {
                         action: "CompleteOffer", 
                         payload: {
@@ -426,7 +422,6 @@ function changePosition(marker, id, confirmation = false) {
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
-                // Handle the response from the server if needed
                 console.log(xhr.responseText);
             }
         };
@@ -522,11 +517,10 @@ $(document).ready(function() {
                                 iframe.src = './rescuer/manage_vehicle.php';
 
                                 var closeButton = document.createElement('span');
-                                closeButton.innerHTML = '&times;'; // '×' character for close icon
+                                closeButton.innerHTML = '&times;';
                                 closeButton.className = 'close';
                                 closeButton.onclick = closeWindow;
 
-                                // Append the close button to the modal
                                 document.getElementById('dialogOverlay').querySelector('.modal').appendChild(closeButton);
 
                                 function closeWindow() {
@@ -605,7 +599,6 @@ $(document).ready(function() {
             });
         },
         error: function(xhr, status, error) {
-            // Handle errors
             console.error(xhr.responseText);
         }
     });

@@ -19,7 +19,6 @@ if (isset($_SESSION['userId']) && $_SESSION['role'] == 'rescuer') {
 
     $cursor = $vehiclesC->findOne(['userId' => $user]);
 
-    // Array of ID
     $load = [[],[]];
 
     foreach ($cursor['load'] as $item) {

@@ -4,7 +4,6 @@ include_once "databaseconnect.php";
 
 $con = connect();
 
-// Assume you have a table named 'locations' with columns 'id', 'latitude', and 'longitude'
 $latitude = $_POST['latitude'];
 $longitude = $_POST['longitude'];
 $id = $_POST['id'];

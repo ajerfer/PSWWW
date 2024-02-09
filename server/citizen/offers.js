@@ -49,7 +49,7 @@ function callDeleteOffer(userId, offerId) {
         // Perform AJAX call
         $.ajax({
             type: "POST",
-            url: "../edit_mongo.php", // Change to the correct URL
+            url: "../edit_mongo.php",
             data: {
                 action: "deleteOffer", 
                 payload: {

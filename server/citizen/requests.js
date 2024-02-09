@@ -76,7 +76,7 @@ function callCreateRequest(userId) {
         // Perform AJAX call
         $.ajax({
             type: "POST",
-            url: "../edit_mongo.php", // Change to the correct URL
+            url: "../edit_mongo.php",
             data: {
                 action: "createRequest", 
                 payload: {
@@ -109,7 +109,7 @@ function callDeleteRequest(userId, requestId) {
         // Perform AJAX call
         $.ajax({
             type: "POST",
-            url: "../edit_mongo.php", // Change to the correct URL
+            url: "../edit_mongo.php",
             data: {
                 action: "deleteRequest", 
                 payload: {
