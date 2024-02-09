@@ -412,10 +412,11 @@ function completeRequest($userId, $requestId, $rescuerId) {
     
     try {
         // Find doc
+        $vehicleDoc = $vehiclesC->findOne(['userId' => $rescuerId]);
         $requestDoc = $requestsC->findOne(['userId' => $userId]);
 
-        if ($requestDoc) {
-            
+        if ($vehicleDoc & $requestDoc) {
+
             $request = "";
             foreach ($requestDoc['requests'] as $r)
                 if ($r['id'] == $requestId) {
@@ -423,31 +424,89 @@ function completeRequest($userId, $requestId, $rescuerId) {
                     break;
                 }
 
-            $vehicleDoc = $vehiclesC->findOne(['userId' => $rescuerId]);
-
-            if ($vehicleDoc) {
-
-            }
-            
-            
-            
-            // Delete the offer 
-            $updateResult = $offersC->updateOne(
-                ['_id' => $userDoc['_id']],
-                ['$pull' => ['offers' => ['id' => $offerId]]]
+            $updateResult = $vehiclesC->updateOne(
+                ['_id' => $vehicleDoc['_id'], 'load.id' => $request['productId']],
+                ['$inc' => ['load.$.quantity' => -$request['nPersons']]]
             );
             
             // Check if the update was successful
-            if ($updateResult->getModifiedCount() > 0) {
-                echo "Offer deleted successfully.";
+            if ($updateResult->getModifiedCount() <= 0) {
+                echo "Error changing vehicle load.";
             } else {
-                echo "Error deleting offer.";
+                // Complete request
+                $updateResult = $requestsC->updateOne(
+                    ['_id' => $requestDoc['_id'], 'load.id' => $request['productId']],
+                    ['$set' => [
+                        'state' => "2",
+                        'dateCompleted' => new MongoDB\BSON\UTCDateTime((new DateTime())->getTimestamp()*1000+ (120*60) * 1000), // Athens hour
+                        'rescuerId' => $rescuerId
+                    ]]
+                );
+
+                if ($updateResult->getModifiedCount() <= 0) {
+                    echo "Error changing request.";
+                }
             }
         } else {
-            echo "Error: No documents found in the requests collection.";
+            echo "Error: No documents found.";
         }
     } catch (MongoDB\Driver\Exception\Exception $e) {
-        echo "Error deleting iffer: " . $e->getMessage();
+        echo "Error completing requst: " . $e->getMessage();
+    }
+}
+
+function completeOffer($userId, $offerId, $rescuerId) {
+    global $offersC;
+    global $vehiclesC;
+    
+    try {
+        // Find doc
+        $vehicleDoc = $vehiclesC->findOne(['userId' => $rescuerId]);
+        $offerDoc = $offersC->findOne(['userId' => $userId]);
+
+        if ($vehicleDoc & $offerDoc) {
+
+            $offer = "";
+            foreach ($offerDoc['offers'] as $o)
+                if ($r['id'] == $offerId) {
+                    $offer = $o;
+                    break;
+                }
+
+            $updatesOk = true;
+            for ($i=0; $i<count($offer['prductsId']) && $updatesOk; $i++) {
+                $updateResult = $vehiclesC->updateOne(
+                    ['_id' => $vehicleDoc['_id'], 'load.id' => $offer['prductsId'][$i]],
+                    ['$inc' => ['load.$.quantity' => $offer['nProducts'][$i]]]
+                );
+                if ($updateResult->getModifiedCount() <= 0) {
+                    echo "Error changing vehicle {$offer['products'][$i]}.";
+                    $updatesOk = false;
+                }
+            }
+            
+            
+            // Check if the update was successful
+            if ($updatesOk) {
+                // Complete offer
+                $updateResult = $offersC->updateOne(
+                    ['_id' => $offerDoc['_id'], 'load.id' => $offer['productId']],
+                    ['$set' => [
+                        'state' => "2",
+                        'dateCompleted' => new MongoDB\BSON\UTCDateTime((new DateTime())->getTimestamp()*1000+ (120*60) * 1000), // Athens hour
+                        'rescuerId' => $rescuerId
+                    ]]
+                );
+
+                if ($updateResult->getModifiedCount() <= 0) {
+                    echo "Error changing offer.";
+                }
+            }
+        } else {
+            echo "Error: No documents found.";
+        }
+    } catch (MongoDB\Driver\Exception\Exception $e) {
+        echo "Error completing offer: " . $e->getMessage();
     }
 }
 
