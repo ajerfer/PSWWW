@@ -155,6 +155,7 @@ if ($isNear && $_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['section'])) {
 
     <?php foreach ($content[$section] as $item): ?>
         <!-- Item Box -->
+        <?php if ($item['quantity'] != 0): ?>
         <div class="item-box" data-category="<?= $item['category'] ?>">
             <h4><?= $item['name'] ?> </h4>
             <ul>
@@ -173,6 +174,7 @@ if ($isNear && $_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['section'])) {
                 <button onclick=" openPopupBox('<?= $item['id'] ?>');">Load</button>
             <?php endif; ?>
         </div>
+        <?php endif; ?>
         <!-- Popup Quantity Box -->
         <div id="modal<?= $item['id'] ?>" class="modal">
             <div class="modal-content">
