@@ -16,14 +16,12 @@ include_once "../mongodbconnect.php";
 $documentP = $productsC->findOne([]);
 
 // Array to store product names
-$productsNames = [];
+$products = [];
+
+// Iterate through products and extract names
 foreach ($documentP['items'] as $item) {
-    $productsNames[] = $item['name'];
+    $products[] = [$item['id'], $item['name']];
 }
-// Delete the empty strings
-$productsNames = array_filter($productsNames, function ($value) {
-    return strlen($value) > 0;
-});
 
 // Save the userId and its associated document
 $userId = "3"; // $_SESSION['userId'];
@@ -134,13 +132,7 @@ function dateFormat ($date) {
             <div class="request-box"> 
                 <h3>Request <?= dateFormat($request['dateCreated']) ?></h3>
                 <ul>
-                    <!-- Show the products requested -->
-                    <li>Products requested: </li>
-                    <ul>
-                    <?php for ($i = 0; $i < count($request['products']); $i++): ?>
-                            <li><?= $request['products'][$i] ?></li>
-                    <?php endfor; ?>
-                    </ul> 
+                    <li>Product requested: <?= $request['product'] ?></li>
                     <li>Persons: <?= $request['nPersons']?> </li>   
                     <!-- Show the state and the corresponding dates -->
                     <?php if ($request['state'] == 0): ?>
@@ -168,15 +160,13 @@ function dateFormat ($date) {
             <label for="persons_input_modal">Persons :</label>
             <input type="number" id="persons_input_modal" class="validity" min="1" value="1" style="margin-bottom: 10px;">
             <div class="input-container">
-                <label for="productDropdown">Add a product: </label>
+                <label for="productDropdown">Select a product: </label>
                 <select id="productDropdown">
-                    <?php foreach ($productsNames as $productName): ?>
-                        <option value="<?= $productName ?>"><?= $productName ?></option>
+                    <?php foreach ($products as $product): ?>
+                        <option value="<?= $product[0] . '|' . $product[1] ?>"><?= $product[1] ?></option>
                     <?php endforeach; ?>
                 </select>
-                <button onclick="addProduct()" style="margin-top:10px">Add Product</button>
             </div>
-            <div id="selectedProductsContainer"></div>
             <div class="btn-container">
                 <button onclick="closePopupBox('newRequest')">Close</button>
                 <button onclick="callCreateRequest(<?= $userId ?>)">Create</button>

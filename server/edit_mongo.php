@@ -203,7 +203,7 @@ function deleteOffer($userId, $offerId) {
     }
 }
 
-function createRequest($userId,$selectedProducts,$nPersons) {
+function createRequest($userId,$selectedProductId,$selectedProduct,$nPersons) {
     global $requestsC;
 
     // Create a new request
@@ -214,7 +214,8 @@ function createRequest($userId,$selectedProducts,$nPersons) {
         "dateCreated" => new MongoDB\BSON\UTCDateTime((new DateTime())->getTimestamp()*1000+ (120*60) * 1000), // Athens hour
         "dateAccepted" => null,
         "dateCompleted" => null,
-        "products" => $selectedProducts,
+        "productId" => $selectedProductId,
+        "product" => $selectedProduct,
         "nPersons"=> $nPersons
     ];
 
@@ -507,10 +508,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         case 'createRequest':
             if (isset($_POST['payload'])) {
                 $userId = $_POST['payload']['userId'];
-                $selectedProducts = $_POST['payload']['selectedProducts'];
+                $selectedProductId = $_POST['payload']['selectedProductId'];
+                $selectedProduct = $_POST['payload']['selectedProduct'];
                 $nPersons = $_POST['payload']['nPersons'];
                 
-                createRequest($userId,$selectedProducts,$nPersons);
+                createRequest($userId,$selectedProductId,$selectedProduct,$nPersons);
             } else {
                 echo "Error: Missing parameters for createRequest.";
             }

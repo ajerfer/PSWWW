@@ -78,15 +78,9 @@ function callCreateOffer(userId, announcementId, quantities) {
 function addProduct() {
     // Get the selected value from the dropdown
     var selectedValue = document.getElementById("productDropdown").value;
-
-    // Separar los dos valores usando el carácter especial (|)
     var valuesArray = selectedValue.split('|');
-    
-    // Ahora, valuesArray contendrá los dos valores separados
     const selectedProductId = valuesArray[0];
     const selectedProduct = valuesArray[1];
-    console.log(selectedProductId);
-    console.log(selectedProduct);
     
     // Check if the product is not already in the list
     if (!selectedProductsId.includes(selectedProductId)) {
