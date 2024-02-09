@@ -73,7 +73,7 @@ foreach ($data as $item) {
     $row = $result->fetch_assoc();
     $desc = "Name: " . $row['name']."<br>";
     $desc .= "Phone: " . $row['phone'] . "<br>";
-    $desc .= "Date created: " . $item['dateCreated'] . "<br>";
+    $desc .= "Date created: " . ($item['dateCreated']->toDateTime())->format('Y-m-d H:i:s') . "<br>";
     $desc .= "Products: ";
     foreach($item['products'] as $p) {
         $desc .= $p." ";
@@ -92,16 +92,13 @@ foreach ($data as $item) {
     }
     
     $rescuerId = null;
+    $date = null;
     if ($item['state'] == "1") {
         $rescuerId = $item['rescuerId'];
-        $sql = "SELECT name FROM rescuers WHERE userID = $rescuerId";
-        $result = $con->query($sql);
-        $row = $result->fetch_assoc();
-        $desc .= "Rescuer: " . $row['name'] . "<br>";
-        $desc .= "Date collected: " . $item['dateCompleted'] . "<br>";
+        $date = ($item['dateAccepted']->toDateTime())->format('Y-m-d H:i:s');
     }
 
-    $markers[] = [3,$document['userId'],$item['id'],$item['state'], $rescuerId,$lat, $lng, $desc, $productsid, $quantity];
+    $markers[] = [3,$document['userId'],$item['id'],$item['state'], $rescuerId,$lat, $lng, $desc, $productsid, $quantity,$date];
 }
 
 $cursor = $requestsC->find();
@@ -125,21 +122,18 @@ foreach ($data as $item) {
     $row = $result->fetch_assoc();
     $desc = "Name: " . $row['name']."<br>";
     $desc .= "Phone: " . $row['phone'] . "<br>";
-    $desc .= "Date created: " . $item['dateCreated'] . "<br>";
-    $desc .= "Products: " . $item['products'];
+    $desc .= "Date created: " . ($item['dateCreated']->toDateTime())->format('Y-m-d H:i:s') . "<br>";
+    $desc .= "Products: " . $item['product'];
     $desc .= "<br>People: " . $item['nPersons'] . "<br>";
     
     $rescuerId = null;
+    $date = null;
     if ($item['state'] == "1") {
         $rescuerId = $item['rescuerId'];
-        $sql = "SELECT name FROM rescuers WHERE userID = $rescuerId";
-        $result = $con->query($sql);
-        $row = $result->fetch_assoc();
-        $desc .= "Rescuer: " . $row['name'] . "<br>";
-        $desc .= "Date collected: " . $item['dateCompleted'] . "<br>";
+        $date = ($item['dateAccepted']->toDateTime())->format('Y-m-d H:i:s');
     }
 
-    $markers[] = [4,$document['userId'],$item['id'],$item['state'], $rescuerId, $lat, $lng, $desc, $item['productsId'], $item['nPersons']];
+    $markers[] = [4,$document['userId'],$item['id'],$item['state'], $rescuerId, $lat, $lng, $desc, $item['productId'], $item['nPersons'],$date];
 }
 
 $sql = "SELECT lat, lng FROM users WHERE userId = 1";

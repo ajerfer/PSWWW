@@ -104,12 +104,11 @@ function distance(coords1, coords2) {
     return distance;
 }
 
-function updateDatabase (userId, id, date, state, rescuerId,type) {
+function updateDatabase (userId, id, state, rescuerId,type) {
     
     var updateParams = {
         userId: userId,
         id: id,
-        dateAccepted: date,
         state: state,
         rescuerId: rescuerId,
         type: type
@@ -138,7 +137,10 @@ function drawLine(marker1, marker2, id) {
 function deleteLine(lineId) {
     polylines.forEach(function(array,index) {
         if (array.key == lineId) {
+            layer_lines.removeLayer(lines);
             lines.removeLayer(polylines[index].line);
+            layer_lines.addLayer(lines);
+            console.log("delete");
             polylines.splice(index,1);
         }
     });
@@ -155,28 +157,38 @@ function acceptButtonListener (marker,rescuer,id,element,type) {
             acceptButton.addEventListener('click', function () {
                 
                 if (rescuer.task < 4) {
-                    marker.bindPopup(element[7]);
+                    
+                    var date = new Date();
+                    date = date.getFullYear() +
+                    '-' + ('0' + (date.getMonth() + 1)).slice(-2) +
+                    '-' + ('0' + date.getDate()).slice(-2) +
+                    ' ' + ('0' + date.getHours()).slice(-2) +
+                    ':' + ('0' + date.getMinutes()).slice(-2) +
+                    ':' + ('0' + date.getSeconds()).slice(-2);
+
+                    marker.bindPopup(element[7]+'Rescuer Name: ' + rescuer.name+'<br>Date accepted: '+date);
                     marker.setIcon(taken_icons[type]);
                     drawLine(marker,rescuer,id);
                     rescuer.task += 1;
                     rescuer.bindPopup('Name: '+rescuer.name+'<br>Active Tasks: '+ rescuer.task +
                                       '<br><button class="openStorage">Open storage</button>');
                     
-                    updateDatabase(element[1], element[2], new Date().getTime(),"1",userid,databaseTypes[type]);
-
+                    updateDatabase(element[1], element[2],"1",rescuer.id,databaseTypes[type]);
+                    
                     var tasks = document.querySelector('.tasks');
                     var insertion = document.createElement('div');
-                    insertion.innerHTML = '<p>'+element[7];
+                    insertion.innerHTML = '<p>'+element[7]+'Rescuer Name: ' + rescuer.name+'<br>Date accepted: '+date;
                     insertion.innerHTML += '<button class="decline" data-id="'+id+'">Decline</button>';
                     insertion.innerHTML += '<button class="complete" data-id="'+id+'">Complete</button></p>';
                     tasks.appendChild(insertion);
+
                     var declineButton = insertion.querySelector('.decline');
                     declineButton.addEventListener('click', function () {
                         tasks.removeChild(insertion);
                         deleteLine(id);
                         marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
                         marker.setIcon(untaken_icons[type]);
-                        updateDatabase(element[1], element[2], null,"0", null,databaseTypes[type]);
+                        updateDatabase(element[1], element[2],"0", null,databaseTypes[type]);
                         rescuer.task -= 1;
                     });
 
@@ -217,7 +229,7 @@ function acceptButtonListener (marker,rescuer,id,element,type) {
                                 tasks.removeChild(insertion);
                                 deleteLine(id);
                                 marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
-                                updateDatabase(element[1], element[2], null,"2", null, databaseTypes[type]);
+                                updateDatabase(element[1], element[2],"2", rescuer.id, databaseTypes[type]);
                                 rescuer.task -= 1; 
 
                             } else if (databaseTypes[type] == "request") {
@@ -248,7 +260,7 @@ function acceptButtonListener (marker,rescuer,id,element,type) {
                                     tasks.removeChild(insertion);
                                     deleteLine(id);
                                     marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
-                                    updateDatabase(element[1], element[2], null,"2", null, databaseTypes[type]);
+                                    updateDatabase(element[1], element[2], "2", rescuer.id, databaseTypes[type]);
                                     rescuer.task -= 1; 
 
                                 }
@@ -270,9 +282,27 @@ function acceptButtonListener (marker,rescuer,id,element,type) {
 }
 
 function addToTasks(marker,element,id,type) {
+    
+    var date = new Date();
+    date = date.getFullYear() +
+    '-' + ('0' + (date.getMonth() + 1)).slice(-2) +
+    '-' + ('0' + date.getDate()).slice(-2) +
+    ' ' + ('0' + date.getHours()).slice(-2) +
+    ':' + ('0' + date.getMinutes()).slice(-2) +
+    ':' + ('0' + date.getSeconds()).slice(-2);
+
+    marker.bindPopup(element[7]+'Rescuer Name: ' + rescuer.name+'<br>Date accepted: '+date);
+    marker.setIcon(taken_icons[type]);
+    drawLine(marker,rescuer,id);
+    rescuer.task += 1;
+    rescuer.bindPopup('Name: '+rescuer.name+'<br>Active Tasks: '+ rescuer.task +
+                      '<br><button class="openStorage">Open storage</button>');
+    
+    updateDatabase(element[1], element[2],"1",rescuer.id,databaseTypes[type]);
+    
     var tasks = document.querySelector('.tasks');
     var insertion = document.createElement('div');
-    insertion.innerHTML = '<p>'+element[7];
+    insertion.innerHTML = '<p>'+element[7]+'Rescuer Name: ' + rescuer.name+'<br>Date accepted: '+date;
     insertion.innerHTML += '<button class="decline" data-id="'+id+'">Decline</button>';
     insertion.innerHTML += '<button class="complete" data-id="'+id+'">Complete</button></p>';
     tasks.appendChild(insertion);
@@ -284,7 +314,8 @@ function addToTasks(marker,element,id,type) {
         marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
         marker.setIcon(untaken_icons[type]);
         acceptButtonListener(marker,rescuer,id,element,type);
-        updateDatabase(element[1], element[2], null,"0", null, databaseTypes[type]);
+        updateDatabase(element[1], element[2], "0", null, databaseTypes[type]);
+        rescuer.task -= 1;
     });
 
     var completeButton = insertion.querySelector('.complete');
@@ -324,7 +355,7 @@ function addToTasks(marker,element,id,type) {
                 tasks.removeChild(insertion);
                 deleteLine(id);
                 marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
-                updateDatabase(element[1], element[2], null,"2", null, databaseTypes[type]);
+                updateDatabase(element[1], element[2], "2", rescuer.id, databaseTypes[type]);
                 rescuer.task -= 1; 
 
             } else if (databaseTypes[type] == "request") {
@@ -355,7 +386,7 @@ function addToTasks(marker,element,id,type) {
                     tasks.removeChild(insertion);
                     deleteLine(id);
                     marker.bindPopup(element[7]+'<button class="acceptButton">Accept</button>');
-                    updateDatabase(element[1], element[2], null,"2", null, databaseTypes[type]);
+                    updateDatabase(element[1], element[2],"2", rescuer.id, databaseTypes[type]);
                     rescuer.task -= 1; 
 
                 }
@@ -464,7 +495,6 @@ $(document).ready(function() {
                     rescuer.task = 0;
                     rescuer.load = element[5];
                     rescuer.quantity = element[6];
-                    console.log(element);
                     
 
                     rescuer.bindPopup('Name: '+rescuer.name+'<br>Active Tasks: '+ rescuer.task +

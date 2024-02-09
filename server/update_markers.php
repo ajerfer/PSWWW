@@ -8,7 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST)) {
         // Extract update parameters from the POST data
         $userId = $_POST['userId'];
         $id = $_POST['id'];
-        $date = $_POST['dateAccepted'];
         $state = $_POST['state'];
         $rescuerId = $_POST['rescuerId'];
 
@@ -22,13 +21,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST)) {
         $filter = ['userId' => $userId, $type.'.id' => $id];
 
         // Specify the field to update and its new value
-        $update = [
-            '$set' => [
-                $type.'.$.dateAccepted' => $date,
-                $type.'.$.state' => $state,
-                $type.'.$.rescuerId' => $rescuerId
-            ]
-        ];
+        switch ($state) {
+            case "0";
+                $update = [
+                    '$set' => [
+                        $type.'.$.dateAccepted' => null,
+                        $type.'.$.state' => $state,
+                        $type.'.$.rescuerId' => null
+                    ]
+                ];
+                break;
+            case "1";
+                $update = [
+                    '$set' => [
+                        $type.'.$.dateAccepted' => new MongoDB\BSON\UTCDateTime((new DateTime())->getTimestamp()*1000+ (120*60) * 1000),
+                        $type.'.$.state' => $state,
+                        $type.'.$.rescuerId' => $rescuerId
+                    ]
+                ];
+                break;
+            case "2";
+                $update = [
+                    '$set' => [
+                        $type.'.$.dateCompleted' => new MongoDB\BSON\UTCDateTime((new DateTime())->getTimestamp()*1000+ (120*60) * 1000),
+                        $type.'.$.state' => $state,
+                        $type.'.$.rescuerId' => $rescuerId
+                    ]
+                ];
+                break;
+        }
 
 
         // Update a single document
