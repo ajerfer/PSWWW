@@ -75,5 +75,8 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] !== 'citizen') {
         <form action="offers.php" method="post">
             <input type="submit" value="Manage Offers">
         </form>
+        <form action="/server/announcements.php" method="post">
+            <input type="submit" value="Announcements">
+        </form>
 </body>
 </html>

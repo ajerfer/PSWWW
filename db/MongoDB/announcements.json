@@ -1,27 +1,80 @@
-{
-    "code": 1,
-    "message": "Retrieved successfully",
-    "announcements": [
-        {
-        "id": "0",
-        "productsId": ["16","20"],
-        "products": ["Water", "Bread"]
-        },
-        {
-        "id": "1",
-        "productsId": ["25","31"],
-        "products": ["Spaghetti", "Disposable gloves"]
-        },
-        {
-        "id": "2",
-        "productsId": ["66","91"],
-        "products": ["Socks", "Cereal bar"]
-        },
-        {
-        "id": "3",
-        "productsId": ["90","99"],
-        "products": ["Condensed milk", "Thermos"]
-        }
-    ]
-}
-  
+[{
+  "_id": {
+    "$oid": "65d6db0028b58fb3c0703d54"
+  },
+  "code": 1,
+  "message": "Retrieved successfully",
+  "announcements": [
+    {
+      "id": "0",
+      "productsId": [
+        "16",
+        "20"
+      ],
+      "products": [
+        "Water",
+        "Bread"
+      ]
+    },
+    {
+      "id": "1",
+      "productsId": [
+        "25",
+        "31"
+      ],
+      "products": [
+        "Spaghetti",
+        "Disposable gloves"
+      ]
+    },
+    {
+      "id": "2",
+      "productsId": [
+        "66",
+        "91"
+      ],
+      "products": [
+        "Socks",
+        "Cereal bar"
+      ]
+    },
+    {
+      "id": "3",
+      "productsId": [
+        "90",
+        "99"
+      ],
+      "products": [
+        "Condensed milk",
+        "Thermos"
+      ]
+    },
+    {
+      "id": "65d6e8adc67a1",
+      "productsId": [
+        "72"
+      ],
+      "products": [
+        "Dishes"
+      ]
+    },
+    {
+      "id": "65d6eb34ea96f",
+      "productsId": [
+        "61"
+      ],
+      "products": [
+        "Prybar"
+      ]
+    },
+    {
+      "id": "65d6eb476a89c",
+      "productsId": [
+        "46"
+      ],
+      "products": [
+        "Paracetamol"
+      ]
+    }
+  ]
+}]

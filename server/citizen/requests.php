@@ -25,7 +25,7 @@ foreach ($documentP['items'] as $item) {
 }
 
 // Save the userId and its associated document
-$userId = "3"; // $_SESSION['userId'];
+$userId = $_SESSION['userId'];
 $documentR = $requestsC->findOne(['userId' => $userId]);
 
 // Divide the requests into 'active' and 'completed' categories

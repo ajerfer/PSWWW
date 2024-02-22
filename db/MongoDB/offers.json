@@ -1,43 +1,146 @@
+[{
+  "_id": {
+    "$oid": "65d6ebe63db2cd9382003c9c"
+  },
+  "code": 1,
+  "message": "Retrieved successfully",
+  "userId": "8",
+  "offers": [
+    {
+      "id": "65d6ebe66fd00",
+      "announcementId": "0",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:38:30.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productsId": [
+        "16",
+        "20"
+      ],
+      "products": [
+        "Water",
+        "Bread"
+      ],
+      "nProducts": [
+        "2",
+        "5"
+      ]
+    },
+    {
+      "id": "65d6ebf0a833f",
+      "announcementId": "65d6eb476a89c",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:38:40.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productsId": [
+        "46"
+      ],
+      "products": [
+        "Paracetamol"
+      ],
+      "nProducts": [
+        "2"
+      ]
+    },
+    {
+      "id": "65d6ebfa6b8b9",
+      "announcementId": "65d6eb34ea96f",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:38:50.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productsId": [
+        "61"
+      ],
+      "products": [
+        "Prybar"
+      ],
+      "nProducts": [
+        "3"
+      ]
+    }
+  ]
+},
 {
-    "code": 1,
-    "message": "Retrieved successfully",
-    "userId":"5",
-    "offers": [
-        {
-        "id": "1",
-        "announcementId":"0",
-        "state": "0", 
-        "rescuerId": null,
-        "dateCreated": {
-            "$date": {
-                "$numberLong": "1644643200000"
-            }},
-        "dateAccepted": null,
-        "dateCompleted": null,
-        "productsId": ["16","20"],
-        "products": ["Water", "Bread"],
-        "nProducts": [5, 7]
-        },
-        {
-        "id": "2",
-        "announcementId":"1",
-        "state": "0", 
-        "rescuerId": null,
-        "dateCreated": {
-            "$date": {
-                "$numberLong": "1644643200000"
-            }},
-        "dateAccepted": {
-            "$date": {
-                "$numberLong": "1644643400000"
-            }},
-        "dateCompleted": {
-            "$date": {
-                "$numberLong": "1644643600000"
-            }},
-        "productsId": ["16"],
-        "products": ["Water"],
-        "nProducts": [10]
-        }
-    ]
-}
+  "_id": {
+    "$oid": "65d6ec1a3db2cd9382003c9d"
+  },
+  "code": 1,
+  "message": "Retrieved successfully",
+  "userId": "9",
+  "offers": [
+    {
+      "id": "65d6ec1ab2637",
+      "announcementId": "1",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:39:22.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productsId": [
+        "25",
+        "31"
+      ],
+      "products": [
+        "Spaghetti",
+        "Disposable gloves"
+      ],
+      "nProducts": [
+        "1",
+        "1"
+      ]
+    },
+    {
+      "id": "65d6ec2148794",
+      "announcementId": "2",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:39:29.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productsId": [
+        "91"
+      ],
+      "products": [
+        "Cereal bar"
+      ],
+      "nProducts": [
+        "1"
+      ]
+    },
+    {
+      "id": "65d6ec2989467",
+      "announcementId": "3",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:39:37.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productsId": [
+        "90"
+      ],
+      "products": [
+        "Condensed milk"
+      ],
+      "nProducts": [
+        "1"
+      ]
+    }
+  ]
+}]

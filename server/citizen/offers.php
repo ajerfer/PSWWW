@@ -14,7 +14,7 @@ include_once "../mongodbconnect.php";
 include_once "../header.php";
 
 // Save the userId and its associated document
-$userId = "3"; // $_SESSION['userId'];
+$userId = $_SESSION['userId'];
 $documentO = $offersC->findOne(['userId' => $userId]);
 
 // Divide the offers into 'active' and 'completed' categories

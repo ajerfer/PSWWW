@@ -1,41 +1,186 @@
+[{
+  "_id": {
+    "$oid": "65d6e4132f2f650267e9f298"
+  },
+  "code": 1,
+  "message": "Retrieved successfully",
+  "userId": "5",
+  "requests": [
+    {
+      "id": "1",
+      "state": "0",
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2022-02-12T05:20:00.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productId": "20",
+      "product": "Bread",
+      "nPersons": "2"
+    },
+    {
+      "id": "65d6e6e78bf25",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:17:11.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productId": "46",
+      "product": "Paracetamol",
+      "nPersons": "2"
+    },
+    {
+      "id": "65d6e6ee44087",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:17:18.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productId": "61",
+      "product": "Prybar",
+      "nPersons": "3"
+    },
+    {
+      "id": "65d6e6fc12e15",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:17:32.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productId": "70",
+      "product": "Pants",
+      "nPersons": "1"
+    }
+  ]
+},
 {
-    "code": 1,
-    "message": "Retrieved successfully",
-    "userId":"5",
-    "requests": [
-        {
-        "id": "1",
-        "state": "0", 
-        "rescuerId": null,
-        "dateCreated": {
-            "$date": {
-                "$numberLong": "1644643200000"
-            }},
-        "dateAccepted": null,
-        "dateCompleted": null,
-        "productId": "20",
-        "product": "Bread",
-        "nPersons": "2"
-        },
-        {
-        "id": "2",
-        "state": "0", 
-        "rescuerId": null,
-        "dateCreated": {
-            "$date": {
-                "$numberLong": "1644643200000"
-            }},
-        "dateAccepted": {
-            "$date": {
-                "$numberLong": "1644643400000"
-            }},
-        "dateCompleted": {
-            "$date": {
-                "$numberLong": "1644643600000"
-            }},
-        "productId": "16",
-        "product": "Water",
-        "nPersons": "2"
-        }
-    ]
-}
+  "_id": {
+    "$oid": "65d6e5ea3db2cd9382003c9a"
+  },
+  "code": 1,
+  "message": "Retrieved successfully",
+  "userId": "3",
+  "requests": [
+    {
+      "id": "65d6e5eabc315",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:12:58.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productId": "42",
+      "product": "Toothbrush",
+      "nPersons": "1"
+    },
+    {
+      "id": "65d6e63037b3d",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:14:08.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productId": "34",
+      "product": "First Aid Kit",
+      "nPersons": "2"
+    },
+    {
+      "id": "65d6e638b84a0",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:14:16.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productId": "84",
+      "product": "water ",
+      "nPersons": "4"
+    },
+    {
+      "id": "65d6e6416295d",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:14:25.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productId": "55",
+      "product": "Plastic bucket",
+      "nPersons": "2"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "65d6e71e3db2cd9382003c9b"
+  },
+  "code": 1,
+  "message": "Retrieved successfully",
+  "userId": "7",
+  "requests": [
+    {
+      "id": "65d6e71e48bac",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:18:06.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productId": "36",
+      "product": "Blanket",
+      "nPersons": "3"
+    },
+    {
+      "id": "65d6e723b122e",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:18:11.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productId": "160",
+      "product": "burn gel",
+      "nPersons": "2"
+    },
+    {
+      "id": "65d6e729b5163",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:18:17.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productId": "89",
+      "product": "Pacifier",
+      "nPersons": "1"
+    },
+    {
+      "id": "65d6e72f4b67d",
+      "state": 0,
+      "rescuerId": null,
+      "dateCreated": {
+        "$date": "2024-02-22T08:18:23.000Z"
+      },
+      "dateAccepted": null,
+      "dateCompleted": null,
+      "productId": "57",
+      "product": "Dust mask",
+      "nPersons": "1"
+    }
+  ]
+}]
