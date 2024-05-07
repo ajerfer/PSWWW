@@ -15,8 +15,8 @@ INSERT INTO `users` (`userId`, `username`, `password`, `role`, `lat`, `lng`) VAL
 (2, 'rescuer1', 'rescuer1', 'rescuer', 38.25, 21.75),
 (3, 'rescuer2', 'rescuer2', 'rescuer', 38.24, 21.73),
 (4, 'rescuer3', 'rescuer3', 'rescuer', 38.246639, 21.74),
-(5, 'citizen1', 'citizen1', 'citizen', 38.246639, 21.735),
-(6, 'citizen2', 'citizen2', 'citizen', 38.246639, 21.745),
+(5, 'citizen1', 'citizen1', 'citizen', 38.245, 21.8),
+(6, 'citizen2', 'citizen2', 'citizen', 38.24, 21.75),
 (7, 'citizen3', 'citizen3', 'citizen', 38.25, 21.735),
-(8, 'citizen4', 'citizen4', 'citizen', 38.24, 21.742),
+(8, 'citizen4', 'citizen4', 'citizen', 38.26, 21.75),
 (9, 'citizen5', 'citizen5', 'citizen', 38.238, 21.73);

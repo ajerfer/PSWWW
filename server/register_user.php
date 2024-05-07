@@ -19,14 +19,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Fatal connection: " . $con->connect_error);
     }
 
-    $queryUser = "INSERT INTO Users (username, password, role) 
-              VALUES ('$username', '$password', 'citizen')";
+    $queryUser = "INSERT INTO Users (username, password, role, lat, lng) 
+              VALUES ('$username', '$password', 'citizen', '$lat', '$lng')";
     mysqli_query($con, $queryUser);
 
     $userId = mysqli_insert_id($con);
 
-    $queryCitizen = "INSERT INTO Citizens (userId, name, surname, phone, lat, lng)
-                 VALUES ('$userId', '$name', '$surname', '$phone', '$lat', '$lng')";
+    $queryCitizen = "INSERT INTO Citizens (userId, name, surname, phone)
+                 VALUES ('$userId', '$name', '$surname', '$phone')";
     mysqli_query($con, $queryCitizen);
 
     if(mysqli_affected_rows($con) > 0) {

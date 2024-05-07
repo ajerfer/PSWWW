@@ -78,4 +78,44 @@
         }
     ]
   }
+  ,
+  {
+  "code": 1,
+    "message": "Retrieved successfully",
+    "userId":"10",
+    "load": [
+        {
+            "id": "16",
+            "name": "Water",
+            "category": "6",
+            "details": [
+              {
+                "detail_name": "volume",
+                "detail_value": "1.5l"
+              },
+              {
+                "detail_name": "pack size",
+                "detail_value": "6"
+              }
+            ],
+            "quantity": 2
+          },
+          {
+            "id": "17",
+            "name": "Orange juice",
+            "category": "6",
+            "details": [
+              {
+                "detail_name": "volume",
+                "detail_value": "250ml"
+              },
+              {
+                "detail_name": "pack size",
+                "detail_value": "12"
+              }
+            ],
+            "quantity": 1
+          }
+        ]
+  }
 ]

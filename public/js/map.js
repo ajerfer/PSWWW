@@ -37,7 +37,9 @@ var map = L.map('map', { zoomControl: false, dragging: false, scrollWheelZoom: f
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
-var markerCluster = L.markerClusterGroup();
+var markerCluster = L.markerClusterGroup({
+    maxClusterRadius: 0
+});
 var rescuerLayer = L.layerGroup();
 var lines = L.layerGroup();
 
@@ -65,7 +67,9 @@ var polylines = [];
 
 // Filter layers
 
-var layer_offer_request = L.markerClusterGroup();
+var layer_offer_request = L.markerClusterGroup({
+    maxClusterRadius: 0
+});
 var layer_active_cars = L.layerGroup();
 var layer_not_active_cars = L.layerGroup();
 var layer_lines = L.layerGroup();
